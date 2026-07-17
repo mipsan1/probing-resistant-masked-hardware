@@ -1,1 +1,20 @@
+# PROLEAD source (cloned separately in CI workflow)
 PROLEAD/
+
+# Synthesis / gate-level netlists — reproducible by `yosys -s synth_*.ys`
+syn/*_syn.v
+syn/*_flat.v
+syn/*_flat.json
+syn/prolead/circuit.v
+syn/prolead/_pre.v
+syn/prolead/masked_sbox_first_order_circuit.v
+
+# Yosys build artifacts
+syn/.yosys/
+
+# Simulation outputs
+sim/
+
+# Editor / OS
+*.swp
+.DS_Store
