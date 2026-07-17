@@ -22,15 +22,16 @@ jobs:
 
       - name: Install system dependencies
         run: |
+          sudo add-apt-repository -y ppa:deadsnakes/ppa
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends \
             build-essential ca-certificates cmake git \
             libboost-all-dev libclipper-dev libflint-dev \
             libgmp-dev libmpfr-dev libomp-dev \
             libssl-dev libqhull-dev pkg-config \
-            python3 python3-dev python3-pip yosys \
+                        python3 python3-dev python3-pip yosys \
             python3.10 python3.10-dev
-          sudo rm -rf /var/lib/apt/lists/*
+                      sudo rm -rf /var/lib/apt/lists/*
 
       - name: Install pycryptodome
         run: pip3 install --break-system-packages --no-cache-dir pycryptodome
