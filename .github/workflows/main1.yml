@@ -49,7 +49,9 @@ jobs:
         run: cd PROLEAD && make release -j"$(nproc)"
 
       - name: Synthesise circuit
-        run: yosys -q syn/synth_circuit.ys
+                run: |
+          mkdir -p syn/prolead
+          yosys -q syn/synth_circuit.ys
 
       - name: Remap cells
         run: python3 syn/remap_prolead_cells.py syn/prolead/circuit.v syn/prolead/circuit.v
