@@ -68,7 +68,6 @@ jobs:
               libboost-all-dev \
               libclipper-dev \
               libflint-dev \
-              libgdstk-dev \
               libgmp-dev \
               libmpfr-dev \
               libomp-dev \
@@ -79,10 +78,28 @@ jobs:
               python3-dev \
               python3-pip \
               yosys
+          # NOTE: gdstk (GDSII layout library) is *not* packaged for
+          # Ubuntu 24.04; we build it from source in a later step.
           sudo rm -rf /var/lib/apt/lists/*
 
       - name: Install pycryptodome
         run: pip3 install --break-system-packages --no-cache-dir pycryptodome
+
+      - name: Build and install gdstk 0.9.60 (layout library, transitive dep of PROLEAD)
+        run: |
+          # `libgdstk-dev` is not packaged for Ubuntu 24.04, so we
+          # build gdstk 0.9.60 from source (the version pinned in
+          # PROLEAD's own `gdstk.nix`).  The output .so is symlinked
+          # into /usr/local so PROLEAD's `-lgdstk` link line picks
+          # it up.
+          git clone --depth 1 --branch v0.9.60 https://github.com/heitzmann/gdstk.git gdstk
+          cd gdstk
+          mkdir -p build && cd build
+          cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local ..
+          make -j"$(nproc)"
+          sudo make install
+          sudo ldconfig
+          ls /usr/local/lib/libgdstk* /usr/local/include/gdstk 2>&1 | head -10
 
       - name: Clone PROLEAD
         run: |
