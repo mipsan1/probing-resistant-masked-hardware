@@ -1,0 +1,25 @@
+  y0_out       wire     8841      0 units  (0 ps)
+
+Traceback of deepest DFF input (wire 9609, 4010 units, DFF = $auto$ff.cc:337:slice$438595):
+  wire x  <- $_MUX_     ($flatten\u_sbox_2.$auto$simple)
+  wire   135776  <- $_XOR_     ($flatten\u_sbox_2.$auto$simple)
+  wire   135777  <- $_XOR_     ($flatten\u_sbox_2.$auto$simple)
+  wire   135785  <- $_XOR_     ($flatten\u_sbox_2.$auto$simple)
+  wire   135817  <- $_XOR_     ($flatten\u_sbox_2.$auto$simple)
+  wire   134280  <- $_DFFE_PN0P_ ($flatten\u_sbox_2.$auto$ff.cc:)
+  wire   134281  <- $_XOR_     ($flatten\u_sbox_2.$auto$simple)
+  wire   136013  <- $_XOR_     ($flatten\u_sbox_2.$auto$simple)
+  wire   136014  <- $_XOR_     ($flatten\u_sbox_2.$auto$simple)
+  wire   136015  <- $_XOR_     ($flatten\u_sbox_2.$auto$simple)
+  wire   134194  <- $_DFFE_PN0P_ ($flatten\u_sbox_2.$auto$ff.cc:)
+  wire   134195  <- $_DFF_PN0_ ($flatten\u_sbox_2.$auto$ff.cc:)
+  wire     9993  <- $_NOT_     ($auto$simplemap.cc:46:simplema)
+  wire    10571  <- $_MUX_     ($auto$simplemap.cc:298:simplem)
+  wire    10027  <- $_XOR_     ($auto$simplemap.cc:106:simplem)
+  wire    10067  <- $_XOR_     ($auto$simplemap.cc:106:simplem)
+  wire    10070  <- $_XOR_     ($auto$simplemap.cc:106:simplem)
+  wire    10074  <- $_XOR_     ($auto$simplemap.cc:106:simplem)
+  wire    10013  <- $_XOR_     ($auto$simplemap.cc:106:simplem)
+  wire     9609  <- D          ($auto$ff.cc:337:slice$438595)
+
+Convergence: 1000 iterations, NOT converged

@@ -1,0 +1,44 @@
+/Users/ckim/Downloads/IEEE-Transactions-TIFS/syn/estimate_delay_json.py:18: SyntaxWarning: invalid escape sequence '\ '
+  sub-module (e.g.\ gf\_mul, gf\_exp) that is on the critical path.
+Module: masked_sbox_first_order
+Real cells: 33417
+  $_MUX_              30414
+  $_XOR_               1064
+  $_AND_                840
+  $_OR_                 542
+  $_NOT_                290
+  $_DFFE_PN0P_          240
+  $_DFF_PN0_             27
+
+Critical-path delay: 9 unit-delay
+                    ≈ 0.5 ns  (assuming 50 ps/unit, 65 nm CMOS)
+                    ≈ 450 ps
+
+Top-5 deepest DFF data inputs (unit delay):
+  wire      640      9 units  (450 ps)  (DFF: $auto$ff.cc:337:slice$85524)
+  wire      641      9 units  (450 ps)  (DFF: $auto$ff.cc:337:slice$85525)
+  wire      645      9 units  (450 ps)  (DFF: $auto$ff.cc:337:slice$85529)
+  wire      646      9 units  (450 ps)  (DFF: $auto$ff.cc:337:slice$85530)
+  wire      624      8 units  (400 ps)  (DFF: $auto$ff.cc:337:slice$85508)
+
+Top-5 deepest primary outputs (unit delay):
+  valid_out    wire      245      0 units  (0 ps)
+  y0_out       wire      246      0 units  (0 ps)
+  y0_out       wire      247      0 units  (0 ps)
+  y0_out       wire      248      0 units  (0 ps)
+  y0_out       wire      249      0 units  (0 ps)
+
+Traceback of deepest DFF input (wire 640, 9 units, DFF = $auto$ff.cc:337:slice$85524):
+  wire x  <- $_MUX_     ($auto$simplemap.cc:298:simplem)
+  wire     3344  <- $_XOR_     ($auto$simplemap.cc:106:simplem)
+  wire     3345  <- $_XOR_     ($auto$simplemap.cc:106:simplem)
+  wire     3356  <- $_XOR_     ($auto$simplemap.cc:106:simplem)
+  wire      696  <- $_DFFE_PN0P_ ($auto$ff.cc:337:slice$85560)
+  wire      697  <- $_XOR_     ($auto$simplemap.cc:106:simplem)
+  wire     3432  <- $_XOR_     ($auto$simplemap.cc:106:simplem)
+  wire     3433  <- $_XOR_     ($auto$simplemap.cc:106:simplem)
+  wire     3434  <- $_XOR_     ($auto$simplemap.cc:106:simplem)
+  wire     3435  <- $_NOT_     ($auto$simplemap.cc:46:simplema)
+  wire      640  <- D          ($auto$ff.cc:337:slice$85524)
+
+Convergence: 6 iterations, converged

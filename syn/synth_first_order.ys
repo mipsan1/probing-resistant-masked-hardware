@@ -1,0 +1,19 @@
+# =====================================================================
+# synth_first_order.ys
+# Yosys synthesis script for the first-order masked AES S-box.
+# Target: generic gate library (no specific cell library).
+# Goal: produce gate-level netlist + area report for the paper.
+# =====================================================================
+
+# Read source files
+read_verilog -sv /Users/ckim/Downloads/IEEE-Transactions-TIFS/rtl/masked_sbox_pkg.v
+read_verilog -sv /Users/ckim/Downloads/IEEE-Transactions-TIFS/rtl/masked_sbox_first_order.v
+
+# Hierarchy check
+hierarchy -check -top masked_sbox_first_order
+
+# Generic synthesis (no specific stdcell library)
+synth -top masked_sbox_first_order
+
+# Statistics
+stat

@@ -1,0 +1,35 @@
+# =====================================================================
+# synth_circuit.ys
+# Synthesize the PROLEAD-compatible wrapper into a single flat
+# `circuit` module.
+# =====================================================================
+
+read_verilog -sv /Users/ckim/Downloads/IEEE-Transactions-TIFS/rtl/masked_sbox_pkg.v
+read_verilog -sv /Users/ckim/Downloads/IEEE-Transactions-TIFS/rtl/masked_sbox_first_order.v
+read_verilog -sv /Users/ckim/Downloads/IEEE-Transactions-TIFS/rtl/circuit.v
+
+hierarchy -check -top circuit
+proc; opt
+fsm; opt
+memory; opt
+techmap; opt
+flatten; opt
+clean
+setundef -zero
+
+# PROLEAD's default `nang45` library aliases do not match the
+# `$_AND_` / `$_OR_` / `$_XOR_` / `$_NOT_` / `$_MUX_` / `$_DFF_P_` /
+# `$_SDFF_PN0_` cell names that Yosys emits when we `write_verilog`
+# after `flatten; opt; clean`.  We therefore:
+#   1) use `-noexpr` so that Yosys writes cell *instances* (not
+#      inlined `assign` expressions), and
+#   2) hand PROLEAD a custom library (`syn/prolead/library_yosys.json`)
+#      whose `name`s and `aliases`s match those Yosys primitives
+#      exactly.  The C++ code matches the Verilog instance module
+#      name against `GetIdentifiers()` of each cell in the library
+#      and checks that the instance ports appear in the cell's
+#      `inputs` / `outputs` lists.
+write_verilog -nostr -noattr -noexpr \
+    /Users/ckim/Downloads/IEEE-Transactions-TIFS/syn/prolead/circuit.v
+
+stat

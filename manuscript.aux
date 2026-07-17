@@ -1,0 +1,142 @@
+\relax 
+\citation{kocher1999dpa,brier2004cpa}
+\citation{ishai2003private,chari1999towards}
+\citation{mangard2005glitch,nikova2006threshold}
+\citation{nikova2006threshold,gross2016dom,cassiers2020hpc}
+\citation{ishai2003private}
+\citation{faust2018composable}
+\@writefile{toc}{\contentsline {section}{\numberline {I}Introduction}{1}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {II}Background and Preliminaries}{1}{}\protected@file@percent }
+\newlabel{sec:background}{{II}{1}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {II-A}}Boolean Masking}{1}{}\protected@file@percent }
+\citation{nikova2006threshold}
+\citation{gross2016dom}
+\citation{cassiers2020hpc}
+\citation{ishai2003private}
+\citation{faust2018composable}
+\citation{barthe2016strong}
+\citation{gross2016dom}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {II-B}}Threshold Implementations and Successors}{2}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {II-C}}Probing Models}{2}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {III}Threat Model and Security Definitions}{2}{}\protected@file@percent }
+\newlabel{sec:model}{{III}{2}{}{}{}}
+\newlabel{def:probing}{{1}{2}{}{}{}}
+\newlabel{def:comp}{{2}{2}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {IV}Proposed Masking Construction}{2}{}\protected@file@percent }
+\newlabel{sec:construction}{{IV}{2}{}{}{}}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {1}{\ignorespaces Proposed order-$d$ masked multiplier}}{2}{}\protected@file@percent }
+\newlabel{alg:mult}{{1}{2}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {V}Formal Security Analysis}{2}{}\protected@file@percent }
+\newlabel{sec:security}{{V}{2}{}{}{}}
+\newlabel{lem:correct}{{1}{2}{}{}{}}
+\newlabel{lem:unif}{{2}{2}{}{}{}}
+\citation{barthe2016strong,faust2018composable}
+\citation{barthe2016strong}
+\citation{duc2014unifying}
+\newlabel{lem:noncomp}{{3}{3}{}{}{}}
+\newlabel{thm:main}{{1}{3}{}{}{}}
+\newlabel{cor:comp}{{1}{3}{}{}{}}
+\newlabel{thm:fullchip}{{2}{3}{}{}{}}
+\newlabel{thm:leakage}{{3}{3}{}{}{}}
+\citation{gross2016dom}
+\citation{cassiers2020hpc}
+\citation{knichel2020silver}
+\citation{muller2022prolead}
+\citation{goodwill2011tvla}
+\newlabel{cor:cost}{{2}{4}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {VI}Simulation-Based Verification Methodology}{4}{}\protected@file@percent }
+\newlabel{sec:method}{{VI}{4}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {VII}Experimental Evaluation}{4}{}\protected@file@percent }
+\newlabel{sec:eval}{{VII}{4}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VII-A}}Setup}{4}{}\protected@file@percent }
+\newlabel{fig:sensitivity:d1}{{1a}{4}{}{}{}}
+\newlabel{sub@fig:sensitivity:d1}{{(a)}{a}}
+\newlabel{fig:sensitivity:d2}{{1b}{4}{}{}{}}
+\newlabel{sub@fig:sensitivity:d2}{{(b)}{b}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Sample-size sensitivity of the four reported metrics as a function of $N$: (top-left) PROLEAD-eq $d{=}1$ single-wire MI, (top-right) PROLEAD-eq $d{=}2$ 2-wire joint MI, (bottom-left) TVLA $\max |t|$, (bottom-right) maximum per-bit MI on the power trace. Red dotted lines mark the corresponding leakage thresholds. All four metrics are in the converged regime at $N{=}10{,}000$; the TVLA $\max |t|$ at $N{\le }5{,}000$ is contaminated by a small-sample fixed-group imbalance and should not be interpreted as a side-channel failure.}}{4}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {First-order ($d{=}1$).}}}{4}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {Second-order ($d{=}2$).}}}{4}{}\protected@file@percent }
+\newlabel{fig:sensitivity}{{1}{4}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VII-B}}Sample-Size Sensitivity}{4}{}\protected@file@percent }
+\newlabel{sec:sensitivity}{{\mbox  {VII-B}}{4}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VII-C}}Security Results}{4}{}\protected@file@percent }
+\newlabel{sec:results}{{\mbox  {VII-C}}{4}{}{}{}}
+\@writefile{toc}{\contentsline {paragraph}{\numberline {\mbox  {VII-C}0a}Robust $d$-probing (PROLEAD-equivalent).}{4}{}\protected@file@percent }
+\citation{goodwill2011tvla}
+\citation{gross2016dom}
+\citation{cassiers2020hpc}
+\@writefile{lot}{\contentsline {table}{\numberline {I}{\ignorespaces Robust $d$-probing verification on the gate-level netlist ($N{=}10{,}000$ random input triples, 256 distinct secret values).}}{5}{}\protected@file@percent }
+\newlabel{tab:probing}{{I}{5}{}{}{}}
+\newlabel{fig:probing:d1}{{2a}{5}{}{}{}}
+\newlabel{sub@fig:probing:d1}{{(a)}{a}}
+\newlabel{fig:probing:d2}{{2b}{5}{}{}{}}
+\newlabel{sub@fig:probing:d2}{{(b)}{b}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Per-wire maximum mutual information $I(w; S)$ across all 27 (resp.\ 35) DFF $Q$ wires and all 15 pipeline-stage offsets, sorted in descending order. The red dashed line marks the single-wire leakage threshold of $0.05$~bits; no wire exceeds it.}}{5}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {First-order ($d{=}1$).}}}{5}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {Second-order ($d{=}2$).}}}{5}{}\protected@file@percent }
+\newlabel{fig:probing}{{2}{5}{}{}{}}
+\@writefile{toc}{\contentsline {paragraph}{\numberline {\mbox  {VII-C}0b}Independent cross-check with PROLEAD.}{5}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{\numberline {\mbox  {VII-C}0c}TVLA on simulated power traces.}{5}{}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {II}{\ignorespaces TVLA on simulated Hamming-distance power traces ($N{=}10{,}000$, $|t|$ threshold = 4.5).}}{5}{}\protected@file@percent }
+\newlabel{tab:tvla}{{II}{5}{}{}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {III}{\ignorespaces Leakage assessment summary: PROLEAD-equivalent robust $d$-probing, TVLA, and MI on simulated power traces.}}{5}{}\protected@file@percent }
+\newlabel{tab:leakage}{{III}{5}{}{}{}}
+\@writefile{toc}{\contentsline {paragraph}{\numberline {\mbox  {VII-C}0d}MI between power trace and secret.}{5}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VII-D}}Cost Comparison}{5}{}\protected@file@percent }
+\newlabel{sec:cost}{{\mbox  {VII-D}}{5}{}{}{}}
+\citation{nikova2006threshold,gross2016dom,cassiers2020hpc}
+\citation{barthe2016strong}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Per-stage TVLA $t$-statistic (top) and mutual information $I(\mathrm  {HD}(c); S)$ (bottom) for the first-order (left column) and second-order (right column) masked AES S-box. Dotted horizontal lines mark the TVLA leakage threshold $|t|{=}4.5$ and the empirical noise floor at $0.05$~bits. The orange bars in the MI panels mark the maximum-MI stage (12), caused by the \texttt  {valid\_out} toggle artifact of the Hamming-distance model.}}{6}{}\protected@file@percent }
+\newlabel{fig:tvla-mi}{{3}{6}{}{}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {IV}{\ignorespaces Gate-level synthesis results for our construction (Yosys~0.67, generic cell library, same S-box function across rows).}}{6}{}\protected@file@percent }
+\newlabel{tab:cost}{{IV}{6}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VII-E}}Full-Chip Masked AES Round~1}{6}{}\protected@file@percent }
+\newlabel{sec:fullchip}{{\mbox  {VII-E}}{6}{}{}{}}
+\@writefile{toc}{\contentsline {paragraph}{\numberline {\mbox  {VII-E}0a}Latency and area.}{6}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{\numberline {\mbox  {VII-E}0b}Functional verification.}{6}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{\numberline {\mbox  {VII-E}0c}Security.}{6}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VII-F}}Discussion}{6}{}\protected@file@percent }
+\citation{chari1999towards}
+\citation{ishai2003private}
+\citation{nikova2006threshold}
+\citation{gross2016dom}
+\citation{cassiers2020hpc}
+\citation{barthe2016strong}
+\citation{faust2018composable}
+\citation{knichel2020silver}
+\citation{muller2022prolead}
+\citation{goodwill2011tvla}
+\citation{duc2014unifying}
+\citation{belaid2020random}
+\citation{berti2023parallel}
+\citation{jahandideh2024algebraic}
+\citation{wang2025precomputation}
+\citation{belaid2025cardinal}
+\citation{belaid2020random}
+\bibstyle{IEEEtran}
+\bibdata{manuscript}
+\bibcite{kocher1999dpa}{1}
+\bibcite{brier2004cpa}{2}
+\bibcite{ishai2003private}{3}
+\bibcite{chari1999towards}{4}
+\bibcite{mangard2005glitch}{5}
+\bibcite{nikova2006threshold}{6}
+\bibcite{gross2016dom}{7}
+\bibcite{cassiers2020hpc}{8}
+\bibcite{faust2018composable}{9}
+\bibcite{barthe2016strong}{10}
+\@writefile{toc}{\contentsline {section}{\numberline {VIII}Related Work}{7}{}\protected@file@percent }
+\newlabel{sec:related}{{VIII}{7}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {IX}Conclusion}{7}{}\protected@file@percent }
+\newlabel{sec:conclusion}{{IX}{7}{}{}{}}
+\@writefile{toc}{\contentsline {section}{References}{7}{}\protected@file@percent }
+\bibcite{duc2014unifying}{11}
+\bibcite{knichel2020silver}{12}
+\bibcite{muller2022prolead}{13}
+\bibcite{goodwill2011tvla}{14}
+\bibcite{belaid2020random}{15}
+\bibcite{berti2023parallel}{16}
+\bibcite{jahandideh2024algebraic}{17}
+\bibcite{wang2025precomputation}{18}
+\bibcite{belaid2025cardinal}{19}
+\gdef \@abspage@last{8}

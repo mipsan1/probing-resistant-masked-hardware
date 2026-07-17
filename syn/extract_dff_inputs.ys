@@ -1,0 +1,20 @@
+# =====================================================================
+# extract_dff_inputs.ys
+# For each DFF cell in the synthesized netlist, print the name of
+# its D (data) input wire. These are the "stable outputs" of each
+# combinational stage and are the natural probe locations for
+# robust d-probing verification.
+#
+# Output is written to stdout in the form:
+#   dff_in N = <wire_name>
+# =====================================================================
+
+read_verilog /Users/ckim/Downloads/IEEE-Transactions-TIFS/syn/masked_sbox_first_order_syn.v
+
+# Find all $_DFF_*_ and $_DFFE_*_ cells and print their D input
+select -list */t:$_DFF_*
+select -list */t:$_DFFE_*
+
+# Print the connections of each DFF cell
+chparam -list
+stat

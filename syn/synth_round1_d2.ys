@@ -1,0 +1,23 @@
+# =====================================================================
+# synth_round1_d2.ys
+# Full-chip second-order masked AES-128 round-1 synthesis flow.
+# Output: gate-level Verilog netlist + JSON for delay estimation.
+# =====================================================================
+
+read_verilog -sv /Users/ckim/Downloads/IEEE-Transactions-TIFS/rtl/masked_sbox_pkg.v
+read_verilog -sv /Users/ckim/Downloads/IEEE-Transactions-TIFS/rtl/masked_sbox_second_order.v
+read_verilog -sv /Users/ckim/Downloads/IEEE-Transactions-TIFS/rtl/masked_aes_round1_second_order.v
+
+hierarchy -check -top masked_aes_round1_second_order
+proc; opt
+fsm; opt
+memory; opt
+techmap; opt
+flatten; opt
+clean
+
+# Preserve $_DFF_PN0P_/$_DFF_PN0_ for iverilog gate-level simulation
+write_verilog -noattr /Users/ckim/Downloads/IEEE-Transactions-TIFS/syn/masked_aes_round1_d2_syn.v
+write_json /Users/ckim/Downloads/IEEE-Transactions-TIFS/syn/masked_aes_round1_d2_flat.json
+
+stat

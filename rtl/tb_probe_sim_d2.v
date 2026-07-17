@@ -1,0 +1,222 @@
+// =====================================================================
+// tb_probe_sim_d2.v
+// PROLEAD-equivalent robust d-probing testbench for the SECOND-ORDER
+// masked AES S-box. Drives the GATE-LEVEL netlist with N random
+// input triples, where the secret = s0 ^ s1 ^ s2, and dumps every
+// DFF Q wire at every clock edge.
+//
+// Gate-level netlist port names: clk, rst_n, valid_in,
+//   x0_in, x1_in, x2_in,
+//   r00, r01, ..., r62   (63 random mask bytes)
+//   valid_out, y0_out, y1_out, y2_out
+//
+// Output files:
+//   /tmp/d2_trace.txt   - one row per clock edge; 35-bit rows
+//   /tmp/d2_header.txt  - one row per input triple
+// =====================================================================
+
+`timescale 1ns/1ps
+
+module tb_probe_sim_d2;
+
+  parameter N_TRIPLES = 10000;
+
+  reg clk;
+  reg rst_n;
+  reg valid_in;
+  reg [7:0] x0_in, x1_in, x2_in;
+
+  // 63 random mask bytes (the gate-level netlist dropped the RTL
+  // registers that were declared but never used)
+  reg [7:0] r00, r01, r02, r03, r04, r05, r06, r07, r08, r09;
+  reg [7:0] r10, r11, r12, r13, r14, r15, r16, r17, r18, r19;
+  reg [7:0] r20, r21, r22, r23, r24, r25, r26, r27, r28, r29;
+  reg [7:0] r30, r31, r32, r33, r34, r35, r36, r37, r38, r39;
+  reg [7:0] r40, r41, r42, r43, r44, r45, r46, r47, r48, r49;
+  reg [7:0] r50, r51, r52, r53, r54, r55, r56, r57, r58, r59;
+  reg [7:0] r60, r61, r62;
+
+  wire valid_out;
+  wire [7:0] y0_out, y1_out, y2_out;
+
+  masked_sbox_second_order dut (
+      .clk(clk),
+      .rst_n(rst_n),
+      .valid_in(valid_in),
+      .x0_in(x0_in), .x1_in(x1_in), .x2_in(x2_in),
+      .r00(r00), .r01(r01), .r02(r02), .r03(r03), .r04(r04),
+      .r05(r05), .r06(r06), .r07(r07), .r08(r08), .r09(r09),
+      .r10(r10), .r11(r11), .r12(r12), .r13(r13), .r14(r14),
+      .r15(r15), .r16(r16), .r17(r17), .r18(r18), .r19(r19),
+      .r20(r20), .r21(r21), .r22(r22), .r23(r23), .r24(r24),
+      .r25(r25), .r26(r26), .r27(r27), .r28(r28), .r29(r29),
+      .r30(r30), .r31(r31), .r32(r32), .r33(r33), .r34(r34),
+      .r35(r35), .r36(r36), .r37(r37), .r38(r38), .r39(r39),
+      .r40(r40), .r41(r41), .r42(r42), .r43(r43), .r44(r44),
+      .r45(r45), .r46(r46), .r47(r47), .r48(r48), .r49(r49),
+      .r50(r50), .r51(r51), .r52(r52), .r53(r53), .r54(r54),
+      .r55(r55), .r56(r56), .r57(r57), .r58(r58), .r59(r59),
+      .r60(r60), .r61(r61), .r62(r62),
+      .valid_out(valid_out),
+      .y0_out(y0_out), .y1_out(y1_out), .y2_out(y2_out)
+  );
+
+  reg [31:0] lfsr;
+  function [7:0] next_random;
+    input dummy;
+    begin
+      lfsr = {lfsr[30:0],
+              lfsr[31] ^ lfsr[21] ^ lfsr[1] ^ lfsr[0]};
+      next_random = lfsr[7:0];
+    end
+  endfunction
+
+  integer trace_fd;
+  integer header_fd;
+
+  reg [7:0] s0, s1, s2;
+  integer t;
+
+  initial begin
+    clk = 0;
+    rst_n = 0;
+    valid_in = 0;
+    x0_in = 0; x1_in = 0; x2_in = 0;
+    {r00, r01, r02, r03, r04, r05, r06, r07, r08, r09,
+     r10, r11, r12, r13, r14, r15, r16, r17, r18, r19,
+     r20, r21, r22, r23, r24, r25, r26, r27, r28, r29,
+     r30, r31, r32, r33, r34, r35, r36, r37, r38, r39,
+     r40, r41, r42, r43, r44, r45, r46, r47, r48, r49,
+     r50, r51, r52, r53, r54, r55, r56, r57, r58, r59,
+     r60, r61, r62} = 0;
+    lfsr = 32'hDEADBEEF;
+
+    trace_fd = $fopen("/tmp/d2_trace.txt", "w");
+    header_fd = $fopen("/tmp/d2_header.txt", "w");
+    if (trace_fd == 0 || header_fd == 0) begin
+      $display("ERROR: cannot open trace/header file");
+      $finish;
+    end
+    $fwrite(header_fd, "# Probe trace for second-order masked S-box\n");
+
+    #20 rst_n = 1;
+
+    for (t = 0; t < N_TRIPLES; t = t + 1) begin
+      s0 = next_random(1'b0);
+      s1 = next_random(1'b0);
+      s2 = next_random(1'b0);
+      x0_in = s0; x1_in = s1; x2_in = s2;
+      r00 = next_random(1'b0); r01 = next_random(1'b0);
+      r02 = next_random(1'b0); r03 = next_random(1'b0);
+      r04 = next_random(1'b0); r05 = next_random(1'b0);
+      r06 = next_random(1'b0); r07 = next_random(1'b0);
+      r08 = next_random(1'b0); r09 = next_random(1'b0);
+      r10 = next_random(1'b0); r11 = next_random(1'b0);
+      r12 = next_random(1'b0); r13 = next_random(1'b0);
+      r14 = next_random(1'b0); r15 = next_random(1'b0);
+      r16 = next_random(1'b0); r17 = next_random(1'b0);
+      r18 = next_random(1'b0); r19 = next_random(1'b0);
+      r20 = next_random(1'b0); r21 = next_random(1'b0);
+      r22 = next_random(1'b0); r23 = next_random(1'b0);
+      r24 = next_random(1'b0); r25 = next_random(1'b0);
+      r26 = next_random(1'b0); r27 = next_random(1'b0);
+      r28 = next_random(1'b0); r29 = next_random(1'b0);
+      r30 = next_random(1'b0); r31 = next_random(1'b0);
+      r32 = next_random(1'b0); r33 = next_random(1'b0);
+      r34 = next_random(1'b0); r35 = next_random(1'b0);
+      r36 = next_random(1'b0); r37 = next_random(1'b0);
+      r38 = next_random(1'b0); r39 = next_random(1'b0);
+      r40 = next_random(1'b0); r41 = next_random(1'b0);
+      r42 = next_random(1'b0); r43 = next_random(1'b0);
+      r44 = next_random(1'b0); r45 = next_random(1'b0);
+      r46 = next_random(1'b0); r47 = next_random(1'b0);
+      r48 = next_random(1'b0); r49 = next_random(1'b0);
+      r50 = next_random(1'b0); r51 = next_random(1'b0);
+      r52 = next_random(1'b0); r53 = next_random(1'b0);
+      r54 = next_random(1'b0); r55 = next_random(1'b0);
+      r56 = next_random(1'b0); r57 = next_random(1'b0);
+      r58 = next_random(1'b0); r59 = next_random(1'b0);
+      r60 = next_random(1'b0); r61 = next_random(1'b0);
+      r62 = next_random(1'b0);
+
+      $fwrite(header_fd, "%02h %02h %02h %02h\n", s0 ^ s1 ^ s2, s0, s1, s2);
+
+      @(negedge clk);
+      valid_in = 1'b1;
+      @(negedge clk);
+      valid_in = 1'b0;
+      repeat (15) @(posedge clk);
+    end
+
+    $fclose(trace_fd);
+    $fclose(header_fd);
+    $display("Done. %0d triples dumped.", N_TRIPLES);
+    $finish;
+  end
+
+  always #5 clk = ~clk;
+
+  initial begin
+    #(N_TRIPLES * 200 + 100000);
+    $display("TIMEOUT");
+    $fatal;
+  end
+
+  // ------------------------------------------------------------------
+  // DFF trace dump for the d=2 design
+  // In the second-order netlist the DFF Q wires are:
+  //   valid_pipe[0..9]   (10 bits)
+  //   y0_out[0..7]        (8 bits)
+  //   y1_out[0..7]        (8 bits)
+  //   y2_out[0..7]        (8 bits)
+  //   valid_out           (1 bit)
+  // = 35 bits per cycle
+  // ------------------------------------------------------------------
+  integer kk;
+  reg [8*1-1:0] ch;
+
+  always @(posedge clk) begin
+    for (kk = 0; kk < 35; kk = kk + 1) begin
+      case (kk)
+        0: ch = dut.valid_pipe[0] ? "1" : "0";
+        1: ch = dut.valid_pipe[1] ? "1" : "0";
+        2: ch = dut.valid_pipe[2] ? "1" : "0";
+        3: ch = dut.valid_pipe[3] ? "1" : "0";
+        4: ch = dut.valid_pipe[4] ? "1" : "0";
+        5: ch = dut.valid_pipe[5] ? "1" : "0";
+        6: ch = dut.valid_pipe[6] ? "1" : "0";
+        7: ch = dut.valid_pipe[7] ? "1" : "0";
+        8: ch = dut.valid_pipe[8] ? "1" : "0";
+        9: ch = dut.valid_pipe[9] ? "1" : "0";
+        10: ch = dut.y0_out[0] ? "1" : "0";
+        11: ch = dut.y0_out[1] ? "1" : "0";
+        12: ch = dut.y0_out[2] ? "1" : "0";
+        13: ch = dut.y0_out[3] ? "1" : "0";
+        14: ch = dut.y0_out[4] ? "1" : "0";
+        15: ch = dut.y0_out[5] ? "1" : "0";
+        16: ch = dut.y0_out[6] ? "1" : "0";
+        17: ch = dut.y0_out[7] ? "1" : "0";
+        18: ch = dut.y1_out[0] ? "1" : "0";
+        19: ch = dut.y1_out[1] ? "1" : "0";
+        20: ch = dut.y1_out[2] ? "1" : "0";
+        21: ch = dut.y1_out[3] ? "1" : "0";
+        22: ch = dut.y1_out[4] ? "1" : "0";
+        23: ch = dut.y1_out[5] ? "1" : "0";
+        24: ch = dut.y1_out[6] ? "1" : "0";
+        25: ch = dut.y1_out[7] ? "1" : "0";
+        26: ch = dut.y2_out[0] ? "1" : "0";
+        27: ch = dut.y2_out[1] ? "1" : "0";
+        28: ch = dut.y2_out[2] ? "1" : "0";
+        29: ch = dut.y2_out[3] ? "1" : "0";
+        30: ch = dut.y2_out[4] ? "1" : "0";
+        31: ch = dut.y2_out[5] ? "1" : "0";
+        32: ch = dut.y2_out[6] ? "1" : "0";
+        33: ch = dut.y2_out[7] ? "1" : "0";
+        34: ch = dut.valid_out ? "1" : "0";
+      endcase
+      $fwrite(trace_fd, "%c", ch);
+    end
+    $fwrite(trace_fd, "\n");
+  end
+
+endmodule

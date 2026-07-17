@@ -1,0 +1,21 @@
+# =====================================================================
+# synth_round1_d2_gl.ys
+# Gate-level netlist for the d=2 full chip, iverilog-friendly.
+# =====================================================================
+
+read_verilog -sv /Users/ckim/Downloads/IEEE-Transactions-TIFS/rtl/masked_sbox_pkg.v
+read_verilog -sv /Users/ckim/Downloads/IEEE-Transactions-TIFS/rtl/masked_sbox_second_order.v
+read_verilog -sv /Users/ckim/Downloads/IEEE-Transactions-TIFS/rtl/masked_aes_round1_second_order.v
+
+hierarchy -check -top masked_aes_round1_second_order
+proc; opt
+fsm; opt
+memory; opt
+techmap; opt
+abc -fast; opt
+clean
+setundef -zero
+
+write_verilog -nostr -noattr /Users/ckim/Downloads/IEEE-Transactions-TIFS/syn/masked_aes_round1_d2_gl_syn.v
+
+stat

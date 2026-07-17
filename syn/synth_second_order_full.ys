@@ -1,0 +1,20 @@
+# =====================================================================
+# synth_second_order_full.ys
+# Full synthesis flow with netlist output for the second-order masked
+# AES S-box. Output: gate-level Verilog netlist.
+# =====================================================================
+
+read_verilog -sv /Users/ckim/Downloads/IEEE-Transactions-TIFS/rtl/masked_sbox_pkg.v
+read_verilog -sv /Users/ckim/Downloads/IEEE-Transactions-TIFS/rtl/masked_sbox_second_order.v
+
+hierarchy -check -top masked_sbox_second_order
+proc; opt
+fsm; opt
+memory; opt
+techmap; opt
+abc -fast; opt
+clean
+
+write_verilog -noattr /Users/ckim/Downloads/IEEE-Transactions-TIFS/syn/masked_sbox_second_order_syn.v
+
+stat

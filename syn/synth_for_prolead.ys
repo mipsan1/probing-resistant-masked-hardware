@@ -1,0 +1,29 @@
+# =====================================================================
+# synth_for_prolead.ys
+# Generate a PROLEAD-compatible gate-level Verilog netlist for our
+# masked AES S-box.
+#
+# PROLEAD expects:
+#   - a `circuit` top module (renamed from masked_sbox_first_order)
+#   - flat gate-level Verilog (Yosys techmap)
+#   - signal names without `\` escape characters
+# =====================================================================
+
+read_verilog -sv /Users/ckim/Downloads/IEEE-Transactions-TIFS/rtl/masked_sbox_pkg.v
+read_verilog -sv /Users/ckim/Downloads/IEEE-Transactions-TIFS/rtl/masked_sbox_first_order.v
+
+# Read the RTL again with -top circuit to rename the top module
+hierarchy -check -top masked_sbox_first_order
+proc; opt
+fsm; opt
+memory; opt
+techmap; opt
+clean
+
+# Yosys's write_verilog emits the top module's name as-is.  Use a
+# post-processing Python step to rename the top module to `circuit`
+# in the generated Verilog.
+
+setundef -zero
+write_verilog -nostr -noattr \
+    /Users/ckim/Downloads/IEEE-Transactions-TIFS/syn/prolead/_pre.v

@@ -1,0 +1,38 @@
+# =====================================================================
+# stage_extract.ys
+# Extract the names of all wires/nets in each combinational stage of
+# the synthesized netlist. A "stage" is a maximal combinational
+# region bounded by DFFs.
+#
+# Output: stage_1_names.txt, stage_2_names.txt, ... each containing
+# one wire name per line.
+# =====================================================================
+
+read_verilog -sv /Users/ckim/Downloads/IEEE-Transactions-TIFS/rtl/masked_sbox_pkg.v
+read_verilog -sv /Users/ckim/Downloads/IEEE-Transactions-TIFS/rtl/masked_sbox_first_order.v
+read_verilog -sv /Users/ckim/Downloads/IEEE-Transactions-TIFS/rtl/masked_sbox_second_order.v
+
+hierarchy -check -top masked_sbox_second_order
+
+# Generic synthesis
+proc; opt
+fsm; opt
+memory; opt
+techmap; opt
+abc -fast; opt
+clean
+
+# Split all nets so each bit is its own signal
+splitnets
+opt
+
+# Print all signals (wires) to a file
+write_rtlil /tmp/second_order_full.il
+
+# List all wire names
+select -list */w:+\[* %ci
+tee -o /tmp/all_wires.txt select -list */
+
+# We need a different approach: iterate over each module and list its wires.
+# Yosys doesn't have a built-in "list all wires" command, but we can
+# dump the IL and parse it.

@@ -1,0 +1,4 @@
+
+Critical-path delay: 410 unit-delay
+                    ≈ 20.5 ns  (assuming 50 ps/unit, 65 nm CMOS)
+                    ≈ 20500 ps

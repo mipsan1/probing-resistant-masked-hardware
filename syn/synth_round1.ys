@@ -1,0 +1,24 @@
+# =====================================================================
+# synth_round1.ys
+# Full synthesis flow for the first-order masked AES Round 1.
+# Output: gate-level Verilog netlist (RTL-style, registers kept).
+# =====================================================================
+
+read_verilog -sv /Users/ckim/Downloads/IEEE-Transactions-TIFS/rtl/masked_sbox_pkg.v
+read_verilog -sv /Users/ckim/Downloads/IEEE-Transactions-TIFS/rtl/masked_sbox_first_order.v
+read_verilog -sv /Users/ckim/Downloads/IEEE-Transactions-TIFS/rtl/masked_aes_round1.v
+
+hierarchy -check -top masked_aes_round1_first_order
+proc; opt
+fsm; opt
+memory; opt
+techmap; opt
+flatten; opt
+clean
+
+# Write synthesized netlist (RTL-style; preserves async-reset always blocks)
+write_verilog -noattr /Users/ckim/Downloads/IEEE-Transactions-TIFS/syn/masked_aes_round1_syn.v
+write_json /Users/ckim/Downloads/IEEE-Transactions-TIFS/syn/masked_aes_round1_flat.json
+
+stat
+

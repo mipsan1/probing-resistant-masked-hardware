@@ -1,0 +1,28 @@
+# =====================================================================
+# synth_round1_gl.ys
+# Gate-level netlist generation for iverilog-friendly simulation.
+#
+# Uses `abc -fast` to technology-map the design into ABC's internal
+# gate library (which uses the same `$_DFF_*` primitives that iverilog
+# supports), then writes a clean Verilog netlist with `-nostr` (no
+# string attributes) and `-noattr` (no cell attributes) so the
+# output is parseable by both iverilog and Verilator.
+# =====================================================================
+
+read_verilog -sv /Users/ckim/Downloads/IEEE-Transactions-TIFS/rtl/masked_sbox_pkg.v
+read_verilog -sv /Users/ckim/Downloads/IEEE-Transactions-TIFS/rtl/masked_sbox_first_order.v
+read_verilog -sv /Users/ckim/Downloads/IEEE-Transactions-TIFS/rtl/masked_aes_round1.v
+
+hierarchy -check -top masked_aes_round1_first_order
+proc; opt
+fsm; opt
+memory; opt
+techmap; opt
+abc -fast; opt
+clean
+setundef -zero
+
+# Make signal names iverilog-safe (no '.' in identifiers)
+write_verilog -nostr -noattr /Users/ckim/Downloads/IEEE-Transactions-TIFS/syn/masked_aes_round1_gl_syn.v
+
+stat

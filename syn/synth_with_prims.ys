@@ -1,0 +1,31 @@
+# =====================================================================
+# synth_with_prims.ys
+# Force Yosys to emit primitive cells ($_DFF_*, $_AND_*, ...) by
+# skipping the `proc` step's flattening. We do this by:
+#   1. synth up to ABC
+#   2. explicitly preserve the DFF cell instances
+#   3. emit with write_verilog (the -noattr flag)
+# =====================================================================
+
+read_verilog -sv /Users/ckim/Downloads/IEEE-Transactions-TIFS/rtl/masked_sbox_pkg.v
+read_verilog -sv /Users/ckim/Downloads/IEEE-Transactions-TIFS/rtl/masked_sbox_first_order.v
+
+hierarchy -check -top masked_sbox_first_order
+proc; opt
+fsm; opt
+memory; opt
+techmap; opt
+abc -fast; opt
+
+# Convert the design to a structural netlist of internal cells
+# without inlining DFFs. Yosys 0.40+ does this via:
+#   - dfflegalize: split $_DFF_*_ into legal targets
+#   - then write_verilog emits primitive cells.
+
+# Just write the netlist as-is and inspect
+write_verilog -noattr /tmp/fo_with_prims.v
+
+# Re-read and see what cells survived
+read_verilog -sv /tmp/fo_with_prims.v
+hierarchy -check -top masked_sbox_first_order
+stat -tech cmos
