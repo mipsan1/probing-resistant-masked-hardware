@@ -42,6 +42,9 @@ jobs:
       - name: Clone PROLEAD
         run: git clone --depth 1 --branch v3.1.0 https://github.com/ChairImpSec/PROLEAD.git PROLEAD
 
+      - name: Patch PROLEAD Makefile for Python 3.10
+        run: |
+                    sed -i 's/-lboost_python310/-lboost_python312/g' PROLEAD/Makefile
       - name: Build PROLEAD
         run: cd PROLEAD && make release -j"$(nproc)"
 
