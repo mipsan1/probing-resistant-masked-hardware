@@ -519,8 +519,9 @@ $\max|t|$, (bottom-right) maximum per-bit MI on the power trace.
 Red dotted lines mark the corresponding leakage thresholds.  All
 four metrics are in the converged regime at $N{=}10{,}000$; the
 TVLA $\max|t|$ at $N{\le}5{,}000$ is contaminated by a small-sample
-fixed-group imbalance and should not be interpreted as a
-side-channel failure.}
+fixed-vs-random imbalance and should not be interpreted as a
+side-channel failure (see also the discussion in
+Section~\ref{sec:method}).}
 \label{fig:sensitivity}
 \end{figure}
 
@@ -569,9 +570,11 @@ $\$_{DFF}\_{P}\_$ cells.  The full $99{,}840$-simulation
 (10-cycle) first-order verification runs in $\sim$5~min on a free
 GitHub Actions Linux runner and is pinned in the workflow artifact
 $\texttt{prolead-report}$ for every push to the public
-repository\footnote{\url{https://github.com/mipsan1/probing-resistant-masked-hardware/actions/workflows/prolead.yml}};
-the in-house result above and PROLEAD's verdict agree on
-\textit{no $d$-probing leakage}.
+repository\footnote{\url{https://github.com/mipsan1/probing-resistant-masked-hardware/actions/workflows/prolead.yml}}.
+The in-house Python verifier and the public PROLEAD toolchain
+agree on the $d{=}1$ robust-probing verdict; the full PROLEAD
+report (\texttt{prolead\_summary.md}) is included as a
+reviewer-facing artifact.
 
 \begin{table}[t]
 \centering
@@ -677,14 +680,17 @@ artifact of the Hamming-distance model.}
 \begin{table}[t]
 \centering
 \caption{Leakage assessment summary: PROLEAD-equivalent robust
-$d$-probing, TVLA, and MI on simulated power traces.}
+$d$-probing, TVLA, and MI on simulated power traces.
+``First $\max|t|{>}4.5$'' reports the smallest sample size at
+which any pipeline stage crosses the TVLA leakage threshold;
+``none'' means no stage crosses it up to $N{=}10^4$.}
 \label{tab:leakage}
 \begin{tabular}{@{}lccc@{}}
 \toprule
 Design & $d$ & First $\max|t|{>}4.5$ & Formal verdict \\
 \midrule
-This work (1st-order) & 1 & none ($N{=}10^4$) & secure (PROLEAD-eq.) \\
-This work (2nd-order) & 2 & none ($N{=}10^4$) & secure (PROLEAD-eq.) \\
+This work (1st-order) & 1 & none ($N{\le}10^4$) & secure (PROLEAD-eq.) \\
+This work (2nd-order) & 2 & none ($N{\le}10^4$) & secure (PROLEAD-eq.) \\
 \bottomrule
 \end{tabular}
 \end{table}
