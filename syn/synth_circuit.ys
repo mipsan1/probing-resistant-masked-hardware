@@ -4,9 +4,9 @@
 # `circuit` module.
 # =====================================================================
 
-read_verilog -sv /Users/ckim/Downloads/IEEE-Transactions-TIFS/rtl/masked_sbox_pkg.v
-read_verilog -sv /Users/ckim/Downloads/IEEE-Transactions-TIFS/rtl/masked_sbox_first_order.v
-read_verilog -sv /Users/ckim/Downloads/IEEE-Transactions-TIFS/rtl/circuit.v
+read_verilog -sv rtl/masked_sbox_pkg.v
+read_verilog -sv rtl/masked_sbox_first_order.v
+read_verilog -sv rtl/circuit.v
 
 hierarchy -check -top circuit
 proc; opt
@@ -30,6 +30,6 @@ setundef -zero
 #      and checks that the instance ports appear in the cell's
 #      `inputs` / `outputs` lists.
 write_verilog -nostr -noattr -noexpr \
-    /Users/ckim/Downloads/IEEE-Transactions-TIFS/syn/prolead/circuit.v
+        syn/prolead/circuit.v
 
 stat
