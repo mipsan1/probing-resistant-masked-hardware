@@ -20,23 +20,25 @@ jobs:
       - name: Checkout submission
         uses: actions/checkout@v4
 
-      - name: Install Icarus Verilog
+      - name: Install Icarus Verilog (with Verilog-2005/SystemVerilog support)
         run: |
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends iverilog
           iverilog -V | head -3
 
-      - name: Verilog syntax check (per-file parse only)
+      - name: Verilog syntax check (per-file parse with -g2012)
         run: |
           failures=0
           total=0
           for f in rtl/*.v; do
             total=$((total+1))
-            # iverilog -t null = parse only, no elaboration/codegen
-            if iverilog -t null "$f" 2>/dev/null; then
+            # iverilog -g2012 -t null = parse only with Verilog-2005 standard
+            # iverilog -g2012 -t null -E (preprocess)
+            if iverilog -g2012 -t null "$f" 2>/dev/null; then
               echo "  OK   $f"
             else
               echo "  FAIL $f"
+              iverilog -g2012 -t null "$f" 2>&1 | head -20
               failures=$((failures+1))
             fi
           done
@@ -46,14 +48,11 @@ jobs:
           fi
           echo "✅ all $total Verilog files passed parse check"
 
-      - name: Repository hygiene — no leftover manuscript/system artifacts
+      - name: Repository hygiene
         run: |
           forbidden=("IEEEtran.cls" "manuscript.tex" "manuscript.bib" "manuscript.bbl" ".DS_Store" "a.out")
           fail=0
           for f in "${forbidden[@]}"; do
-            if [ -e "$f" ]; then
-              echo "  ❌ forbidden: $f"
-              fail=1
-            fi
+            [ -e "$f" ] && { echo "  ❌ forbidden: $f"; fail=1; }
           done
           [ $fail -eq 0 ] && echo "✅ repo clean" || exit 1

@@ -22,44 +22,56 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Install system dependencies
+      - name: Install system + Python dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends \
-            build-essential ca-certificates git \
-            python3 python3-dev python3-pip
+            build-essential git python3 python3-dev python3-pip
           sudo rm -rf /var/lib/apt/lists/*
+          pip3 install --break-system-packages --no-cache-dir numpy scipy pycryptodome
 
-      - name: Install Python dependencies
-        run: pip3 install --break-system-packages --no-cache-dir numpy scipy pycryptodome
-
-      - name: Sanity check input files
+      - name: Sanity check input files (verbose)
         run: |
           for f in sim/power_gl_header.txt sim/power_gl_trace.txt \
                    sim/power_gl_d2_header.txt sim/power_gl_d2_trace.txt; do
-            test -f "$f" || (echo "missing $f" && exit 1)
+            if [ -f "$f" ]; then
+              size=$(stat -c%s "$f")
+              echo "  ✅ $f ($size bytes)"
+            else
+              echo "  ❌ missing $f"
+              exit 1
+            fi
           done
-          echo "all inputs present"
+          # show first few lines of trace to verify format
+          echo ""
+          echo "=== first 3 lines of sim/power_gl_trace.txt ==="
+          head -3 sim/power_gl_trace.txt | cut -c1-100
+          echo ""
+          echo "=== first 3 lines of sim/power_gl_header.txt ==="
+          head -3 sim/power_gl_header.txt
 
       - name: Run 1st-order probe analyzer
         run: |
           mkdir -p probe/results
+          set -x
           python3 probe/probe_analyzer.py \
             sim/power_gl_trace.txt \
             sim/power_gl_header.txt \
             probe/results/pyprobe_1st_order \
-            2
+            2 2>&1 | tee probe/results/pyprobe_1st_order.log
+          set +x
           echo "===== 1st-order summary ====="
           head -50 probe/results/pyprobe_1st_order/probing_report.md
 
       - name: Run 2nd-order probe analyzer
         run: |
-          mkdir -p probe/results
+          set -x
           python3 probe/probe_analyzer.py \
             sim/power_gl_d2_trace.txt \
             sim/power_gl_d2_header.txt \
             probe/results/pyprobe_2nd_order \
-            4
+            4 2>&1 | tee probe/results/pyprobe_2nd_order.log
+          set +x
           echo "===== 2nd-order summary ====="
           head -50 probe/results/pyprobe_2nd_order/probing_report.md
 
