@@ -1,0 +1,66 @@
+name: CI smoke test — Verilog syntax + repository hygiene
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    name: Quick Verilog syntax + hygiene check (<3 min)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout submission
+        uses: actions/checkout@v4
+
+      - name: Install Icarus Verilog
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends iverilog
+          iverilog -V | head -3
+
+      - name: Verilog syntax check (rtl/circuit.v)
+        run: |
+          iverilog -t null rtl/circuit.v
+          echo "✅ rtl/circuit.v syntax OK"
+
+      - name: Verilog syntax check (all .v in rtl/)
+        run: |
+          failures=0
+          for f in rtl/*.v; do
+            if iverilog -t null "$f" 2>/dev/null; then
+              echo "  OK  $f"
+            else
+              echo "  FAIL $f"
+              iverilog -t null "$f"
+              failures=$((failures+1))
+            fi
+          done
+          if [ $failures -gt 0 ]; then
+            echo "❌ $failures file(s) failed syntax check"
+            exit 1
+          fi
+          echo "✅ all Verilog files passed syntax check"
+
+      - name: Repository hygiene — no leftover manuscript files
+        run: |
+          forbidden=("IEEEtran.cls" "manuscript.tex" "manuscript.bib" "manuscript.bbl" ".DS_Store" "a.out")
+          fail=0
+          for f in "${forbidden[@]}"; do
+            if [ -e "$f" ]; then
+              echo "  ❌ forbidden file present: $f"
+              fail=1
+            fi
+          done
+          if [ $fail -eq 0 ]; then
+            echo "✅ repository is clean (no manuscript/system artifacts)"
+          else
+            exit 1
+          fi
