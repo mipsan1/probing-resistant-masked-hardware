@@ -14,7 +14,7 @@ jobs:
   probe-analyzer:
     name: PyPROBE robust d-probing verification
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 15
 
     steps:
       - name: Checkout submission
@@ -30,19 +30,16 @@ jobs:
             python3 python3-dev python3-pip
           sudo rm -rf /var/lib/apt/lists/*
 
-      - name: Install Python dependencies (NumPy, SciPy, pycryptodome)
-        run: |
-          pip3 install --break-system-packages --no-cache-dir \
-            numpy scipy pycryptodome
+      - name: Install Python dependencies
+        run: pip3 install --break-system-packages --no-cache-dir numpy scipy pycryptodome
 
       - name: Sanity check input files
         run: |
-          test -f sim/power_gl_header.txt || (echo "missing sim/power_gl_header.txt" && exit 1)
-          test -f sim/power_gl_trace.txt  || (echo "missing sim/power_gl_trace.txt"  && exit 1)
-          echo "1st-order inputs OK"
-          test -f sim/power_gl_d2_header.txt || (echo "missing sim/power_gl_d2_header.txt" && exit 1)
-          test -f sim/power_gl_d2_trace.txt  || (echo "missing sim/power_gl_d2_trace.txt"  && exit 1)
-          echo "2nd-order inputs OK"
+          for f in sim/power_gl_header.txt sim/power_gl_trace.txt \
+                   sim/power_gl_d2_header.txt sim/power_gl_d2_trace.txt; do
+            test -f "$f" || (echo "missing $f" && exit 1)
+          done
+          echo "all inputs present"
 
       - name: Run 1st-order probe analyzer
         run: |
@@ -70,27 +67,21 @@ jobs:
         run: |
           fail=0
           for d in 1st_order 2nd_order; do
-            if grep -q "FAIL" probe/results/pyprobe_${d}/probing_report.md; then
-              echo "❌ ${d} report contains FAIL"
+            if ! grep -q "PASS" probe/results/pyprobe_${d}/probing_report.md; then
+              echo "❌ ${d}: missing PASS"
               fail=1
             fi
-            if ! grep -q "PASS" probe/results/pyprobe_${d}/probing_report.md; then
-              echo "❌ ${d} report missing PASS"
+            if grep -q "FAIL" probe/results/pyprobe_${d}/probing_report.md; then
+              echo "❌ ${d}: contains FAIL"
               fail=1
             fi
           done
-          if [ $fail -eq 0 ]; then
-            echo "✅ both 1st and 2nd order reports contain PASS verdicts"
-          else
-            exit 1
-          fi
+          [ $fail -eq 0 ] && echo "✅ both PyPROBE reports pass" || exit 1
 
       - name: Upload probe report
         uses: actions/upload-artifact@v4
         with:
           name: pyprobe-report
-          path: |
-            probe/results/pyprobe_1st_order/
-            probe/results/pyprobe_2nd_order/
+          path: probe/results/pyprobe_*/
           if-no-files-found: error
           retention-days: 90

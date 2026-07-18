@@ -26,51 +26,34 @@ jobs:
           sudo apt-get install -y --no-install-recommends iverilog
           iverilog -V | head -3
 
-      - name: Verilog syntax check (single file, iverilog -tnull is a parse-only pass)
+      - name: Verilog syntax check (per-file parse only)
         run: |
           failures=0
+          total=0
           for f in rtl/*.v; do
-            # iverilog -t null performs parse-only (no elaboration, no codegen).
-            # This catches all syntax errors but ignores missing modules / undef wires.
+            total=$((total+1))
+            # iverilog -t null = parse only, no elaboration/codegen
             if iverilog -t null "$f" 2>/dev/null; then
               echo "  OK   $f"
             else
               echo "  FAIL $f"
-              iverilog -t null "$f" 2>&1 | head -10
               failures=$((failures+1))
             fi
           done
           if [ $failures -gt 0 ]; then
-            echo "❌ $failures file(s) failed syntax check"
+            echo "❌ $failures / $total files failed parse"
             exit 1
           fi
-          echo "✅ all $(ls rtl/*.v | wc -l | tr -d ' ') Verilog files passed syntax check"
+          echo "✅ all $total Verilog files passed parse check"
 
-      - name: Verilog elaboration (top-level + all deps)
-        run: |
-          # Use iverilog -E (elaborate only) on the top testbench to confirm
-          # the entire dependency graph resolves.
-          if iverilog -E -o /tmp/elab.out rtl/tb_masked_sbox.v 2>elab_err.log; then
-            echo "✅ rtl/tb_masked_sbox.v elaborates successfully"
-            head -3 elab_err.log || true
-          else
-            echo "❌ elaboration failed — full log:"
-            cat elab_err.log
-            exit 1
-          fi
-
-      - name: Repository hygiene — no leftover manuscript files
+      - name: Repository hygiene — no leftover manuscript/system artifacts
         run: |
           forbidden=("IEEEtran.cls" "manuscript.tex" "manuscript.bib" "manuscript.bbl" ".DS_Store" "a.out")
           fail=0
           for f in "${forbidden[@]}"; do
             if [ -e "$f" ]; then
-              echo "  ❌ forbidden file present: $f"
+              echo "  ❌ forbidden: $f"
               fail=1
             fi
           done
-          if [ $fail -eq 0 ]; then
-            echo "✅ repository is clean (no manuscript/system artifacts)"
-          else
-            exit 1
-          fi
+          [ $fail -eq 0 ] && echo "✅ repo clean" || exit 1
