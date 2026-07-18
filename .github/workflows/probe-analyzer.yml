@@ -33,47 +33,64 @@ jobs:
       - name: Install Python dependencies (NumPy, SciPy, pycryptodome)
         run: |
           pip3 install --break-system-packages --no-cache-dir \
-            numpy scipy pycryptodome matplotlib
+            numpy scipy pycryptodome
 
       - name: Sanity check input files
         run: |
-          test -f sim/power_gl_header.txt || (echo "missing header" && exit 1)
-          test -f sim/power_gl_trace.txt  || (echo "missing trace"  && exit 1)
-          test -f sim/power_gl_secret.txt || (echo "missing secret" && exit 1)
-          echo "input files OK"
+          test -f sim/power_gl_header.txt || (echo "missing sim/power_gl_header.txt" && exit 1)
+          test -f sim/power_gl_trace.txt  || (echo "missing sim/power_gl_trace.txt"  && exit 1)
+          echo "1st-order inputs OK"
+          test -f sim/power_gl_d2_header.txt || (echo "missing sim/power_gl_d2_header.txt" && exit 1)
+          test -f sim/power_gl_d2_trace.txt  || (echo "missing sim/power_gl_d2_trace.txt"  && exit 1)
+          echo "2nd-order inputs OK"
 
       - name: Run 1st-order probe analyzer
         run: |
+          mkdir -p probe/results
           python3 probe/probe_analyzer.py \
-            --trace  sim/power_gl_trace.txt \
-            --header sim/power_gl_header.txt \
-            --secret sim/power_gl_secret.txt \
-            --out-md  probe/results/pyprobe_1st_order.md \
-            --out-csv probe/results/pyprobe_1st_order.csv \
-            --n-bits 27 --n-shares 2
+            sim/power_gl_trace.txt \
+            sim/power_gl_header.txt \
+            probe/results/pyprobe_1st_order \
+            2
           echo "===== 1st-order summary ====="
-          head -40 probe/results/pyprobe_1st_order.md
+          head -50 probe/results/pyprobe_1st_order/probing_report.md
 
       - name: Run 2nd-order probe analyzer
         run: |
+          mkdir -p probe/results
           python3 probe/probe_analyzer.py \
-            --trace  sim/power_gl_d2_trace.txt \
-            --header sim/power_gl_d2_header.txt \
-            --secret sim/power_gl_secret.txt \
-            --out-md  probe/results/pyprobe_2nd_order.md \
-            --out-csv probe/results/pyprobe_2nd_order.csv \
-            --n-bits 27 --n-shares 4
+            sim/power_gl_d2_trace.txt \
+            sim/power_gl_d2_header.txt \
+            probe/results/pyprobe_2nd_order \
+            4
           echo "===== 2nd-order summary ====="
-          head -40 probe/results/pyprobe_2nd_order.md
+          head -50 probe/results/pyprobe_2nd_order/probing_report.md
+
+      - name: Sanity gate — expect PASS in both reports
+        run: |
+          fail=0
+          for d in 1st_order 2nd_order; do
+            if grep -q "FAIL" probe/results/pyprobe_${d}/probing_report.md; then
+              echo "❌ ${d} report contains FAIL"
+              fail=1
+            fi
+            if ! grep -q "PASS" probe/results/pyprobe_${d}/probing_report.md; then
+              echo "❌ ${d} report missing PASS"
+              fail=1
+            fi
+          done
+          if [ $fail -eq 0 ]; then
+            echo "✅ both 1st and 2nd order reports contain PASS verdicts"
+          else
+            exit 1
+          fi
 
       - name: Upload probe report
         uses: actions/upload-artifact@v4
         with:
           name: pyprobe-report
           path: |
-            probe/results/pyprobe_1st_order.md
-            probe/results/pyprobe_1st_order.csv
-            probe/results/pyprobe_2nd_order.md
-            probe/results/pyprobe_2nd_order.csv
+            probe/results/pyprobe_1st_order/
+            probe/results/pyprobe_2nd_order/
           if-no-files-found: error
           retention-days: 90
