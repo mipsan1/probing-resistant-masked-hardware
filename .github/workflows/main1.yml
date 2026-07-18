@@ -61,11 +61,11 @@ jobs:
         run: |
           mkdir -p sim/prolead
           ./PROLEAD/release/PROLEAD \
-            --designFile syn/prolead/circuit.v \
-            --configFile syn/prolead/config.json \
-            --outputDirectory sim/prolead \
-            --libraryFile syn/prolead/library_yosys.json \
-            --libraryName yosys_primitives
+            syn/prolead/circuit.v \
+            syn/prolead/config.json \
+            sim/prolead \
+            syn/prolead/library_yosys.json \
+            yosys_primitives
 
       - name: Convert report
         run: python3 syn/prolead_report_to_md.py sim/prolead/server_config.json sim/prolead/server_report.txt sim/prolead/prolead_summary.md
@@ -75,11 +75,13 @@ jobs:
           python3 -c "
           import pathlib, sys
           report = pathlib.Path('sim/prolead/server_report.txt').read_text()
-          fails = [l for l in report.splitlines() if ('leakage' in l.lower() and 'detect' in l.lower()) or 'verdict: insecure' in l.lower()]
+          fails = [l for l in report.splitlines()
+                   if ('leakage' in l.lower() and 'detect' in l.lower())
+                   or 'verdict: insecure' in l.lower()]
           if fails:
-            print('PROLEAD REPORTED LEAKAGE:')
-            for l in fails: print('  ', l)
-            sys.exit(1)
+              print('PROLEAD REPORTED LEAKAGE:')
+              for l in fails: print(' ', l)
+              sys.exit(1)
           print('PROLEAD: no leakage detected for d=1.')
           "
 
