@@ -42,3 +42,10 @@ syn/*_sim_netlist.v
 
 # Submission portal package (duplicates of root manuscript files)
 tifs_submission/
+
+# Pre-publication manuscript material — kept local until acceptance
+manuscript.tex
+manuscript.pdf
+manuscript.bib
+IEEEtran.cls
+cover_letter/
