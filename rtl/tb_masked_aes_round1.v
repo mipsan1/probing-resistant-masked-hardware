@@ -3,24 +3,38 @@
 // =====================================================================
 // Self-checking testbench for masked_aes_round1_first_order.
 //
-// Strategy: a run script generates 100 random (plaintext, key) pairs
-// plus the corresponding 448 mask bytes and expected round-1 outputs,
-// writes them to hex files, then runs this testbench which:
+// DUT contract: y = MixColumns(ShiftRows(SubBytes(x))) XOR rk, where
+// x = x0_in ^ x1_in is the plaintext and rk = rk0_in ^ rk1_in is an
+// EXTERNALLY supplied 128-bit round key (no initial AddRoundKey, no
+// key schedule on chip).  The gold generator sim/gen_round1_vectors.py
+// implements exactly this contract with the reference's ShiftRows
+// convention (out[r][c] = in[r][(c - r) mod 4]).
+//
+// Strategy: the generator writes 100 random (plaintext, rk) pairs
+// plus the corresponding 112 mask bytes per vector and the expected
+// round-1 outputs to hex files, then this testbench:
 //
 //   1. reads the triples from hex files (one per vector),
-//   2. drives the DUT with valid_in + the 448 mask bytes + 4 share
-//      buses (plaintext, key) for one cycle,
-//   3. waits 14 cycles for valid_out,
+//   2. drives the DUT with valid_in + the 112 mask bytes + 4 share
+//      buses (plaintext, round key) for one cycle,
+//   3. waits 20 cycles after valid_in (19-cycle round latency + 1
+//      cycle so the output-register NBA update settles),
 //   4. checks y0_out ^ y1_out == expected.
 //
-// The run script lives in syn/run_round1_sim.sh and writes:
+// The run script lives in syn/run_round1_sim.sh; the generator is
+// sim/gen_round1_vectors.py.  Files:
 //
-//   sim/round1_vectors.txt     -- one line per vector:
-//     <idx> <pt_hex> <key_hex> <golden_hex>
-//   sim/round1_mask_<idx>.txt  -- 448 hex bytes, one per line
+//   sim/round1_pt.txt        -- one 128-bit plaintext per line
+//   sim/round1_keys.txt      -- one 128-bit external round key per line
+//   sim/round1_gold.txt      -- one 128-bit expected output per line
+//   sim/round1_mask_<idx>.txt  -- 112 hex bytes, one per line
+//
+// The 128-bit files are stored byte-reversed so that $readmemh lands
+// state byte k at bus bits [8k+7:8k] (the DUT's packing); see
+// sim/gen_round1_vectors.py.
 //
 // Usage:
-//   cd sim && bash run_round1_sim.sh
+//   bash syn/run_round1_sim.sh        (from the workspace root)
 // =====================================================================
 
 `ifndef TB_MASKED_AES_ROUND1_V
@@ -31,7 +45,9 @@
 module tb_masked_aes_round1;
 
     integer N_VECTORS = 100;
-    integer LATENCY   = 12;
+    integer LATENCY   = 20;   // 19-cycle round latency + 1 cycle so the
+                              // output-register NBA update settles before
+                              // the blocking sample below.
 
     reg clk;
     reg rst_n;
@@ -43,18 +59,18 @@ module tb_masked_aes_round1;
     // DUT inputs
     reg               valid_in;
     reg  [127:0]      x0_in, x1_in, rk0_in, rk1_in;
-    reg  [7:0]        r_in [0:447];
+    reg  [7:0]        r_in [0:111];
 
     // DUT outputs
     wire              valid_out;
     wire [127:0]      y0_out, y1_out;
 
     // Generate DUT instance with port-by-port named binding for
-    // the 448 mask bytes.  Done via generate-for to keep the
+    // the 112 mask bytes.  Done via generate-for to keep the
     // module body short.
     genvar k;
     generate
-        for (k = 0; k < 448; k = k + 1) begin : GEN_PORT
+        for (k = 0; k < 112; k = k + 1) begin : GEN_PORT
             // No-op: ports are bound by name in the named-port
             // instantiation below.
         end
@@ -96,112 +112,27 @@ module tb_masked_aes_round1;
         .r100_in (r_in[100]), .r101_in (r_in[101]), .r102_in (r_in[102]), .r103_in (r_in[103]),
         .r104_in (r_in[104]), .r105_in (r_in[105]), .r106_in (r_in[106]), .r107_in (r_in[107]),
         .r108_in (r_in[108]), .r109_in (r_in[109]), .r110_in (r_in[110]), .r111_in (r_in[111]),
-        .r112_in (r_in[112]), .r113_in (r_in[113]), .r114_in (r_in[114]), .r115_in (r_in[115]),
-        .r116_in (r_in[116]), .r117_in (r_in[117]), .r118_in (r_in[118]), .r119_in (r_in[119]),
-        .r120_in (r_in[120]), .r121_in (r_in[121]), .r122_in (r_in[122]), .r123_in (r_in[123]),
-        .r124_in (r_in[124]), .r125_in (r_in[125]), .r126_in (r_in[126]), .r127_in (r_in[127]),
-        .r128_in (r_in[128]), .r129_in (r_in[129]), .r130_in (r_in[130]), .r131_in (r_in[131]),
-        .r132_in (r_in[132]), .r133_in (r_in[133]), .r134_in (r_in[134]), .r135_in (r_in[135]),
-        .r136_in (r_in[136]), .r137_in (r_in[137]), .r138_in (r_in[138]), .r139_in (r_in[139]),
-        .r140_in (r_in[140]), .r141_in (r_in[141]), .r142_in (r_in[142]), .r143_in (r_in[143]),
-        .r144_in (r_in[144]), .r145_in (r_in[145]), .r146_in (r_in[146]), .r147_in (r_in[147]),
-        .r148_in (r_in[148]), .r149_in (r_in[149]), .r150_in (r_in[150]), .r151_in (r_in[151]),
-        .r152_in (r_in[152]), .r153_in (r_in[153]), .r154_in (r_in[154]), .r155_in (r_in[155]),
-        .r156_in (r_in[156]), .r157_in (r_in[157]), .r158_in (r_in[158]), .r159_in (r_in[159]),
-        .r160_in (r_in[160]), .r161_in (r_in[161]), .r162_in (r_in[162]), .r163_in (r_in[163]),
-        .r164_in (r_in[164]), .r165_in (r_in[165]), .r166_in (r_in[166]), .r167_in (r_in[167]),
-        .r168_in (r_in[168]), .r169_in (r_in[169]), .r170_in (r_in[170]), .r171_in (r_in[171]),
-        .r172_in (r_in[172]), .r173_in (r_in[173]), .r174_in (r_in[174]), .r175_in (r_in[175]),
-        .r176_in (r_in[176]), .r177_in (r_in[177]), .r178_in (r_in[178]), .r179_in (r_in[179]),
-        .r180_in (r_in[180]), .r181_in (r_in[181]), .r182_in (r_in[182]), .r183_in (r_in[183]),
-        .r184_in (r_in[184]), .r185_in (r_in[185]), .r186_in (r_in[186]), .r187_in (r_in[187]),
-        .r188_in (r_in[188]), .r189_in (r_in[189]), .r190_in (r_in[190]), .r191_in (r_in[191]),
-        .r192_in (r_in[192]), .r193_in (r_in[193]), .r194_in (r_in[194]), .r195_in (r_in[195]),
-        .r196_in (r_in[196]), .r197_in (r_in[197]), .r198_in (r_in[198]), .r199_in (r_in[199]),
-        .r200_in (r_in[200]), .r201_in (r_in[201]), .r202_in (r_in[202]), .r203_in (r_in[203]),
-        .r204_in (r_in[204]), .r205_in (r_in[205]), .r206_in (r_in[206]), .r207_in (r_in[207]),
-        .r208_in (r_in[208]), .r209_in (r_in[209]), .r210_in (r_in[210]), .r211_in (r_in[211]),
-        .r212_in (r_in[212]), .r213_in (r_in[213]), .r214_in (r_in[214]), .r215_in (r_in[215]),
-        .r216_in (r_in[216]), .r217_in (r_in[217]), .r218_in (r_in[218]), .r219_in (r_in[219]),
-        .r220_in (r_in[220]), .r221_in (r_in[221]), .r222_in (r_in[222]), .r223_in (r_in[223]),
-        .r224_in (r_in[224]), .r225_in (r_in[225]), .r226_in (r_in[226]), .r227_in (r_in[227]),
-        .r228_in (r_in[228]), .r229_in (r_in[229]), .r230_in (r_in[230]), .r231_in (r_in[231]),
-        .r232_in (r_in[232]), .r233_in (r_in[233]), .r234_in (r_in[234]), .r235_in (r_in[235]),
-        .r236_in (r_in[236]), .r237_in (r_in[237]), .r238_in (r_in[238]), .r239_in (r_in[239]),
-        .r240_in (r_in[240]), .r241_in (r_in[241]), .r242_in (r_in[242]), .r243_in (r_in[243]),
-        .r244_in (r_in[244]), .r245_in (r_in[245]), .r246_in (r_in[246]), .r247_in (r_in[247]),
-        .r248_in (r_in[248]), .r249_in (r_in[249]), .r250_in (r_in[250]), .r251_in (r_in[251]),
-        .r252_in (r_in[252]), .r253_in (r_in[253]), .r254_in (r_in[254]), .r255_in (r_in[255]),
-        .r256_in (r_in[256]), .r257_in (r_in[257]), .r258_in (r_in[258]), .r259_in (r_in[259]),
-        .r260_in (r_in[260]), .r261_in (r_in[261]), .r262_in (r_in[262]), .r263_in (r_in[263]),
-        .r264_in (r_in[264]), .r265_in (r_in[265]), .r266_in (r_in[266]), .r267_in (r_in[267]),
-        .r268_in (r_in[268]), .r269_in (r_in[269]), .r270_in (r_in[270]), .r271_in (r_in[271]),
-        .r272_in (r_in[272]), .r273_in (r_in[273]), .r274_in (r_in[274]), .r275_in (r_in[275]),
-        .r276_in (r_in[276]), .r277_in (r_in[277]), .r278_in (r_in[278]), .r279_in (r_in[279]),
-        .r280_in (r_in[280]), .r281_in (r_in[281]), .r282_in (r_in[282]), .r283_in (r_in[283]),
-        .r284_in (r_in[284]), .r285_in (r_in[285]), .r286_in (r_in[286]), .r287_in (r_in[287]),
-        .r288_in (r_in[288]), .r289_in (r_in[289]), .r290_in (r_in[290]), .r291_in (r_in[291]),
-        .r292_in (r_in[292]), .r293_in (r_in[293]), .r294_in (r_in[294]), .r295_in (r_in[295]),
-        .r296_in (r_in[296]), .r297_in (r_in[297]), .r298_in (r_in[298]), .r299_in (r_in[299]),
-        .r300_in (r_in[300]), .r301_in (r_in[301]), .r302_in (r_in[302]), .r303_in (r_in[303]),
-        .r304_in (r_in[304]), .r305_in (r_in[305]), .r306_in (r_in[306]), .r307_in (r_in[307]),
-        .r308_in (r_in[308]), .r309_in (r_in[309]), .r310_in (r_in[310]), .r311_in (r_in[311]),
-        .r312_in (r_in[312]), .r313_in (r_in[313]), .r314_in (r_in[314]), .r315_in (r_in[315]),
-        .r316_in (r_in[316]), .r317_in (r_in[317]), .r318_in (r_in[318]), .r319_in (r_in[319]),
-        .r320_in (r_in[320]), .r321_in (r_in[321]), .r322_in (r_in[322]), .r323_in (r_in[323]),
-        .r324_in (r_in[324]), .r325_in (r_in[325]), .r326_in (r_in[326]), .r327_in (r_in[327]),
-        .r328_in (r_in[328]), .r329_in (r_in[329]), .r330_in (r_in[330]), .r331_in (r_in[331]),
-        .r332_in (r_in[332]), .r333_in (r_in[333]), .r334_in (r_in[334]), .r335_in (r_in[335]),
-        .r336_in (r_in[336]), .r337_in (r_in[337]), .r338_in (r_in[338]), .r339_in (r_in[339]),
-        .r340_in (r_in[340]), .r341_in (r_in[341]), .r342_in (r_in[342]), .r343_in (r_in[343]),
-        .r344_in (r_in[344]), .r345_in (r_in[345]), .r346_in (r_in[346]), .r347_in (r_in[347]),
-        .r348_in (r_in[348]), .r349_in (r_in[349]), .r350_in (r_in[350]), .r351_in (r_in[351]),
-        .r352_in (r_in[352]), .r353_in (r_in[353]), .r354_in (r_in[354]), .r355_in (r_in[355]),
-        .r356_in (r_in[356]), .r357_in (r_in[357]), .r358_in (r_in[358]), .r359_in (r_in[359]),
-        .r360_in (r_in[360]), .r361_in (r_in[361]), .r362_in (r_in[362]), .r363_in (r_in[363]),
-        .r364_in (r_in[364]), .r365_in (r_in[365]), .r366_in (r_in[366]), .r367_in (r_in[367]),
-        .r368_in (r_in[368]), .r369_in (r_in[369]), .r370_in (r_in[370]), .r371_in (r_in[371]),
-        .r372_in (r_in[372]), .r373_in (r_in[373]), .r374_in (r_in[374]), .r375_in (r_in[375]),
-        .r376_in (r_in[376]), .r377_in (r_in[377]), .r378_in (r_in[378]), .r379_in (r_in[379]),
-        .r380_in (r_in[380]), .r381_in (r_in[381]), .r382_in (r_in[382]), .r383_in (r_in[383]),
-        .r384_in (r_in[384]), .r385_in (r_in[385]), .r386_in (r_in[386]), .r387_in (r_in[387]),
-        .r388_in (r_in[388]), .r389_in (r_in[389]), .r390_in (r_in[390]), .r391_in (r_in[391]),
-        .r392_in (r_in[392]), .r393_in (r_in[393]), .r394_in (r_in[394]), .r395_in (r_in[395]),
-        .r396_in (r_in[396]), .r397_in (r_in[397]), .r398_in (r_in[398]), .r399_in (r_in[399]),
-        .r400_in (r_in[400]), .r401_in (r_in[401]), .r402_in (r_in[402]), .r403_in (r_in[403]),
-        .r404_in (r_in[404]), .r405_in (r_in[405]), .r406_in (r_in[406]), .r407_in (r_in[407]),
-        .r408_in (r_in[408]), .r409_in (r_in[409]), .r410_in (r_in[410]), .r411_in (r_in[411]),
-        .r412_in (r_in[412]), .r413_in (r_in[413]), .r414_in (r_in[414]), .r415_in (r_in[415]),
-        .r416_in (r_in[416]), .r417_in (r_in[417]), .r418_in (r_in[418]), .r419_in (r_in[419]),
-        .r420_in (r_in[420]), .r421_in (r_in[421]), .r422_in (r_in[422]), .r423_in (r_in[423]),
-        .r424_in (r_in[424]), .r425_in (r_in[425]), .r426_in (r_in[426]), .r427_in (r_in[427]),
-        .r428_in (r_in[428]), .r429_in (r_in[429]), .r430_in (r_in[430]), .r431_in (r_in[431]),
-        .r432_in (r_in[432]), .r433_in (r_in[433]), .r434_in (r_in[434]), .r435_in (r_in[435]),
-        .r436_in (r_in[436]), .r437_in (r_in[437]), .r438_in (r_in[438]), .r439_in (r_in[439]),
-        .r440_in (r_in[440]), .r441_in (r_in[441]), .r442_in (r_in[442]), .r443_in (r_in[443]),
-        .r444_in (r_in[444]), .r445_in (r_in[445]), .r446_in (r_in[446]), .r447_in (r_in[447]),
         .valid_out(valid_out),
         .y0_out   (y0_out),
         .y1_out   (y1_out)
     );
 
     // ------------------------------------------------------------------
-    // Vector file
-    //   <idx 0..99> <pt_hex 32 chars> <key_hex 32 chars> <golden_hex 32>
+    // Vector files: one 128-bit hex word per line.
     // ------------------------------------------------------------------
     reg [127:0] exp_pt    [0:99];
     reg [127:0] exp_key   [0:99];
     reg [127:0] exp_gold  [0:99];
 
     initial begin
-        $readmemh("sim/round1_vectors.txt", exp_pt);
-        $readmemh("sim/round1_keys.txt",   exp_key);
-        $readmemh("sim/round1_gold.txt",   exp_gold);
+        $readmemh("sim/round1_pt.txt",   exp_pt);
+        $readmemh("sim/round1_keys.txt", exp_key);
+        $readmemh("sim/round1_gold.txt", exp_gold);
     end
 
     // ------------------------------------------------------------------
-    // Mask file reader — 448 bytes per vector, one per line, hex.
-    // We open the file for each vector and read all 448 bytes into
+    // Mask file reader — 112 bytes per vector, one per line, hex.
+    // We open the file for each vector and read all 112 bytes into
     // r_in[].  File names are sim/round1_mask_<idx>.txt.
     // ------------------------------------------------------------------
     integer   mfd;
@@ -218,7 +149,7 @@ module tb_masked_aes_round1;
                 $display("ERROR: cannot open %0s", mask_fname);
                 $fatal;
             end
-            for (mi = 0; mi < 448; mi = mi + 1) begin
+            for (mi = 0; mi < 112; mi = mi + 1) begin
                 if ($fscanf(mfd, "%h", r_in[mi]) != 1) begin
                     $display("ERROR: short read at %0s line %0d",
                              mask_fname, mi);
@@ -276,7 +207,7 @@ module tb_masked_aes_round1;
         valid_in = 1'b0;
         x0_in = 128'h0;  x1_in  = 128'h0;
         rk0_in = 128'h0; rk1_in = 128'h0;
-        for (b = 0; b < 448; b = b + 1) r_in[b] = 8'h0;
+        for (b = 0; b < 112; b = b + 1) r_in[b] = 8'h0;
 
         rst_n = 1'b0;
         repeat (4) @(posedge clk);
@@ -285,8 +216,8 @@ module tb_masked_aes_round1;
 
         for (n = 0; n < 100; n = n + 1) begin : VEC_LOOP
             // Build random shares for the n-th test vector.
-            // The run script writes round1_vectors.txt with the
-            // SAME (pt, key) sequence that the run script uses
+            // The generator writes round1_pt.txt with the
+            // SAME (pt, rk) sequence that it uses
             // for round1_mask_<n>.txt.
             for (b = 0; b < 16; b = b + 1) begin
                 x0_rand[8*b +: 8] = next_byte(0);
@@ -305,9 +236,10 @@ module tb_masked_aes_round1;
             valid_in = 1'b0;
 
             // Wait LATENCY cycles (literal to keep iverilog happy)
-            @(posedge clk); @(posedge clk); @(posedge clk); @(posedge clk);
-            @(posedge clk); @(posedge clk); @(posedge clk); @(posedge clk);
-            @(posedge clk); @(posedge clk); @(posedge clk); @(posedge clk);
+            @(posedge clk); @(posedge clk); @(posedge clk); @(posedge clk); @(posedge clk);
+            @(posedge clk); @(posedge clk); @(posedge clk); @(posedge clk); @(posedge clk);
+            @(posedge clk); @(posedge clk); @(posedge clk); @(posedge clk); @(posedge clk);
+            @(posedge clk); @(posedge clk); @(posedge clk); @(posedge clk); @(posedge clk);
 
             actual = y0_out ^ y1_out;
             if (actual != exp_gold[n]) begin

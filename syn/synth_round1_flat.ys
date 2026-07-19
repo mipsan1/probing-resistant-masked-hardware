@@ -1,0 +1,56 @@
+# =====================================================================
+# synth_round1_flat.ys
+# FLATTENED gate-level synthesis for the first-order masked AES Round 1
+# (full chip: 16 S-boxes + ShiftRows + MixColumns + AddRoundKey).
+#
+# Output: syn/masked_aes_round1_flat_syn.v
+#   - generic Yosys cells only ($_AND_/$_XOR_/$_DFFE_PN0P_/$_DFF_PN0_/...),
+#     NO abc mapping, so the DFF primitives stay $_DFFE_PN0P_/$_DFF_PN0_
+#     (async active-low reset, posedge clock, with/without enable)
+#   - fully flattened (single module), suitable for iverilog when
+#     compiled together with Yosys' simlib.v
+#     (/opt/homebrew/Cellar/yosys/0.67/share/yosys/simlib.v)
+#
+# Hard-cell flattening: gf_sq_byte_mod / gf_mul_byte_mod /
+# aes_affine_byte_mod carry (* keep_hierarchy = 1 *).  BOTH setattr
+# forms are required before `flatten`; either one alone leaves
+# blackboxes or flattens nothing (same trick as the known-good
+# syn/prolead/synth_for_prolead.ys flow that built circuit_struct.v).
+#
+# Run from the workspace root:
+#   yosys syn/synth_round1_flat.ys
+# =====================================================================
+
+read_verilog -sv /Users/ckim/Downloads/IEEE-Transactions-TIFS_0717_hardware/rtl/masked_sbox_pkg.v
+read_verilog -sv /Users/ckim/Downloads/IEEE-Transactions-TIFS_0717_hardware/rtl/masked_sbox_first_order.v
+read_verilog -sv /Users/ckim/Downloads/IEEE-Transactions-TIFS_0717_hardware/rtl/masked_aes_round1.v
+
+hierarchy -check -top masked_aes_round1_first_order
+proc; opt
+fsm; opt
+memory; opt
+techmap; opt
+clean
+
+# Hierarchy-preserving generic-cell netlist (S-boxes stay instances).
+# This is the SAME design as the flattened netlist below, written one
+# pass earlier; `flatten` below is purely structural, so cycle behavior
+# is identical.  iverilog elaborates this ~2.7 MB form in seconds,
+# while the fully flattened ~48 MB expression form exceeds the
+# 300 s sandbox process limit even in front-end parsing — the
+# gate-level functional sim (syn/run_round1_gl_sim.sh) therefore runs
+# against this file.
+write_verilog -noattr /Users/ckim/Downloads/IEEE-Transactions-TIFS_0717_hardware/syn/masked_aes_round1_hier_syn.v
+
+# Clear keep_hierarchy on the hard cells (both attribute domains) and
+# flatten everything into the top module.
+setattr -set keep_hierarchy 0
+setattr -mod -set keep_hierarchy 0
+flatten
+opt
+clean
+setundef -zero
+
+write_verilog -noattr /Users/ckim/Downloads/IEEE-Transactions-TIFS_0717_hardware/syn/masked_aes_round1_flat_syn.v
+
+stat

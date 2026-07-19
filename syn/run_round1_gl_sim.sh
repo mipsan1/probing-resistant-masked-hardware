@@ -1,38 +1,33 @@
 #!/usr/bin/env bash
-# Gate-level functional sim: synthesize netlist, recompile + run testbench.
+# Gate-level functional sim: synthesize the flattened netlist (no abc
+# mapping; generic $_DFFE_PN0P_/$_DFF_PN0_ primitives), recompile the
+# testbench against it and run.
+#
+# Netlists written by yosys syn/synth_round1_flat.ys:
+#   syn/masked_aes_round1_flat_syn.v  -- fully flattened single module
+#     (~48 MB; used for yosys `stat` reporting and structural flows;
+#     exceeds iverilog's capacity in the 300 s sandbox process window)
+#   syn/masked_aes_round1_hier_syn.v  -- the SAME design one pass
+#     before `flatten` (S-boxes stay instances; ~2.7 MB).  `flatten`
+#     is purely structural, so cycle behavior is identical; this is
+#     the file the gate-level functional sim below runs against.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-# 1. Vector generation (same as run_round1_sim.sh)
-python3 - <<'PYEOF'
-import os, sys, random
-sys.path.insert(0, ".")
-from reference.masked_aes import masked_aes_round1
-random.seed(20260717)
-N = 100
-os.makedirs("sim", exist_ok=True)
-pt_lines, key_lines, gold_lines = [], [], []
-for i in range(N):
-    pt = random.randbytes(16)
-    k  = random.randbytes(16)
-    g  = masked_aes_round1(pt, k)
-    pt_lines.append(f"{int.from_bytes(pt, 'big'):032x}")
-    key_lines.append(f"{int.from_bytes(k,  'big'):032x}")
-    gold_lines.append(f"{int.from_bytes(g, 'big'):032x}")
-    mask_lines = [f"{random.randint(0, 255):02x}" for _ in range(448)]
-    with open(f"sim/round1_mask_{i}.txt", "w") as f:
-        f.write("\n".join(mask_lines) + "\n")
-with open("sim/round1_pt.txt",   "w") as f: f.write("\n".join(pt_lines)   + "\n")
-with open("sim/round1_keys.txt", "w") as f: f.write("\n".join(key_lines)  + "\n")
-with open("sim/round1_gold.txt", "w") as f: f.write("\n".join(gold_lines) + "\n")
-print(f"Generated {N} vectors in sim/")
-PYEOF
+# 1. Vector generation (DUT contract: gold = MC(SR(SB(pt))) XOR rk)
+python3 sim/gen_round1_vectors.py
 
-# 2. Compile testbench + gate-level netlist (which already inlines
-#    masked_sbox_first_order as $_AND_/$_XOR_ primitives).
+# 2. Synthesize the gate-level netlists (skip with FAST=1)
+if [ "${FAST:-0}" != "1" ]; then
+    yosys syn/synth_round1_flat.ys
+fi
+
+# 3. Compile testbench + gate-level netlist (hierarchy-preserving form
+#    of the flattened design; yosys write_verilog emits generic cells
+#    as assign/always RTL-style processes, so no simlib.v is needed).
 cd rtl
-iverilog -g2012 -I . -o /tmp/tb_round1_gl.vvp \
+iverilog -g2012 -I . -o /tmp/round1_tb_gl.vvp \
     tb_masked_aes_round1.v \
-    ../syn/masked_aes_round1_syn.v
+    ../syn/masked_aes_round1_hier_syn.v
 cd ..
-vvp /tmp/tb_round1_gl.vvp
+vvp /tmp/round1_tb_gl.vvp

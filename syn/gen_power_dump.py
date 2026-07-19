@@ -10,7 +10,8 @@ Output files (read by iverilog $readmemh):
   sim/power_s1.txt      - 32-hex share-1 of plaintext
   sim/power_rk0.txt     - 32-hex share-0 of round key (= key_share_0)
   sim/power_rk1.txt     - 32-hex share-1 of round key (= key_share_1)
-  sim/power_masks.txt   - 448 mask bytes per vector, 16K lines
+  sim/power_masks.txt   - 96 mask bytes per vector, one 2-hex line
+                          per byte (6 bytes per S-box x 16 S-boxes)
 
 The "secret" for TVLA is the low byte of the plaintext (1 of 256
 values), uniformly distributed.
@@ -40,7 +41,7 @@ def main(n_vectors: int = 10000, seed: int = 20260717):
             s1 = bytes(a ^ b for a, b in zip(pt, s0))
             rk0 = random.randbytes(16)
             rk1 = bytes(a ^ b for a, b in zip(key, rk0))
-            masks = [random.randint(0, 255) for _ in range(448)]
+            masks = [random.randint(0, 255) for _ in range(96)]
 
             # secret = pt[0] (uniform over 0..255)
             secret = pt[0]

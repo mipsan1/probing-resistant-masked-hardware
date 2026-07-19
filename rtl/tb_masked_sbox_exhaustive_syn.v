@@ -13,7 +13,7 @@
 
 `timescale 1ns/1ps
 
-`include "/Users/ckim/Downloads/IEEE-Transactions-TIFS/rtl/masked_sbox_pkg.v"
+`include "masked_sbox_pkg.v"
 
 module tb_masked_sbox_exhaustive_syn;
 
@@ -51,11 +51,7 @@ module tb_masked_sbox_exhaustive_syn;
   // First-order gate-level DUT
   reg valid_in_1;
   reg [7:0] x0_1, x1_1;
-  reg [7:0] r0_1, r1_1, r2_1, r3_1, r4_1, r5_1;
-  reg [7:0] r6_1, r7_1, r8_1, r9_1, r10_1, r11_1;
-  reg [7:0] r12_1, r13_1, r14_1, r15_1, r16_1, r17_1;
-  reg [7:0] r18_1, r19_1, r20_1, r21_1, r22_1, r23_1;
-  reg [7:0] r24_1, r25_1, r26_1, r27_1;
+  reg [7:0] r0_1, r1_1, r2_1, r3_1, r4_1, r5_1, r6_1;
   wire valid_out_1;
   wire [7:0] y0_1, y1_1;
 
@@ -64,13 +60,9 @@ module tb_masked_sbox_exhaustive_syn;
       .rst_n(rst_n),
       .valid_in(valid_in_1),
       .x0_in(x0_1), .x1_in(x1_1),
-      .r0_in(r0_1), .r1_in(r1_1), .r2_in(r2_1), .r3_in(r3_1),
-      .r4_in(r4_1), .r5_in(r5_1), .r6_in(r6_1), .r7_in(r7_1),
-      .r8_in(r8_1), .r9_in(r9_1), .r10_in(r10_1), .r11_in(r11_1),
-      .r12_in(r12_1), .r13_in(r13_1), .r14_in(r14_1), .r15_in(r15_1),
-      .r16_in(r16_1), .r17_in(r17_1), .r18_in(r18_1), .r19_in(r19_1),
-      .r20_in(r20_1), .r21_in(r21_1), .r22_in(r22_1), .r23_in(r23_1),
-      .r24_in(r24_1), .r25_in(r25_1), .r26_in(r26_1), .r27_in(r27_1),
+      .r0_in(r0_1), .r1_in(r1_1), .r2_in(r2_1),
+      .r3_in(r3_1), .r4_in(r4_1), .r5_in(r5_1),
+      .r6_in(r6_1),
       .valid_out(valid_out_1),
       .y0_out(y0_1), .y1_out(y1_1)
   );
@@ -149,17 +141,7 @@ module tb_masked_sbox_exhaustive_syn;
       r0_1  = next_random(1'b0);  r1_1  = next_random(1'b0);
       r2_1  = next_random(1'b0);  r3_1  = next_random(1'b0);
       r4_1  = next_random(1'b0);  r5_1  = next_random(1'b0);
-      r6_1  = next_random(1'b0);  r7_1  = next_random(1'b0);
-      r8_1  = next_random(1'b0);  r9_1  = next_random(1'b0);
-      r10_1 = next_random(1'b0);  r11_1 = next_random(1'b0);
-      r12_1 = next_random(1'b0);  r13_1 = next_random(1'b0);
-      r14_1 = next_random(1'b0);  r15_1 = next_random(1'b0);
-      r16_1 = next_random(1'b0);  r17_1 = next_random(1'b0);
-      r18_1 = next_random(1'b0);  r19_1 = next_random(1'b0);
-      r20_1 = next_random(1'b0);  r21_1 = next_random(1'b0);
-      r22_1 = next_random(1'b0);  r23_1 = next_random(1'b0);
-      r24_1 = next_random(1'b0);  r25_1 = next_random(1'b0);
-      r26_1 = next_random(1'b0);  r27_1 = next_random(1'b0);
+      r6_1  = next_random(1'b0);
 
       in_flight_1 = sec;
       seen_valid_1 = 1'b0;

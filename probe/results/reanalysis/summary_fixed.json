@@ -1,0 +1,40 @@
+[
+  {
+    "tag": "d1",
+    "genuine_stages": [
+      12
+    ],
+    "tvla_max_cond_genuine": 0.5404,
+    "tvla_max_fixed_genuine": 0.1769,
+    "tvla_max_higher_order": 1.2891,
+    "mi_stage12_plugin": 0.20776172661586415,
+    "mi_stage12_mm": 0.0,
+    "mi_full_plugin": 0.025,
+    "mi_full_mm": 0.0054,
+    "mi_wire_max_plugin": 0.0224,
+    "mi_wire_max_mm": 0.0041,
+    "mi_wire_null_p99_max": 0.0239,
+    "mi_pair_top_plugin": 0.0665,
+    "mi_pair_top_mm": 0.0113,
+    "mi_pair_null_p99": 0.0628
+  },
+  {
+    "tag": "d2",
+    "genuine_stages": [
+      12
+    ],
+    "tvla_max_cond_genuine": 1.2311,
+    "tvla_max_fixed_genuine": 0.0919,
+    "tvla_max_higher_order": 1.2311,
+    "mi_stage12_plugin": 0.259656427067538,
+    "mi_stage12_mm": 0.0,
+    "mi_full_plugin": 0.0285,
+    "mi_full_mm": 0.0039,
+    "mi_wire_max_plugin": 0.0247,
+    "mi_wire_max_mm": 0.0064,
+    "mi_wire_null_p99_max": 0.0234,
+    "mi_pair_top_plugin": 0.0658,
+    "mi_pair_top_mm": 0.0106,
+    "mi_pair_null_p99": 0.0643
+  }
+]

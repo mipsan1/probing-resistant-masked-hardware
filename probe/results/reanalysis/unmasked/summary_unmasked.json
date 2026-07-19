@@ -1,0 +1,31 @@
+{
+  "tag": "unmasked_posctrl",
+  "n_triples": 10000,
+  "lut_output_offset": 12,
+  "lut_mismatches": 0,
+  "secret_coverage_256": 256,
+  "genuine_stages": [
+    12
+  ],
+  "tvla_max_cond_genuine": 0.614,
+  "tvla_max_fixed_genuine": 0.7855,
+  "tvla_max_higher_order": 2.2097,
+  "mi_output_stage": 12,
+  "mi_stage_output_plugin": 0.13846880971232325,
+  "mi_stage_output_mm": 0.0,
+  "mi_full_plugin": 0.0206,
+  "mi_full_mm": 0.0084,
+  "mi_wire_max_plugin": 1.0,
+  "mi_wire_max_mm": 0.9816,
+  "mi_wire_null_p99_max": 0.0234,
+  "mi_pair_top_plugin": 0.0638,
+  "mi_pair_top_mm": 0.0086,
+  "mi_pair_null_p99": 0.0647,
+  "detection": {
+    "probing_wire_mi_fires": true,
+    "stage_mi_fires": false,
+    "tvla_first_order_fires": false,
+    "tvla_higher_order_fires": false,
+    "overall_fires": false
+  }
+}

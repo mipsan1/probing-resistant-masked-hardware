@@ -1,0 +1,27 @@
+{
+  "wire_obs_max": 0.021900255798167304,
+  "wire_off": 0,
+  "wire_idx": 30,
+  "wire_family_p99": 0.024723520708251703,
+  "wire_family_max": 0.0252097437666529,
+  "wire_family_pval": 0.59,
+  "pair_global": {
+    "pair": [
+      23,
+      31
+    ],
+    "off": 18,
+    "mi": 1.0208496747694504
+  },
+  "pair_nostruct": {
+    "pair": [
+      26,
+      31
+    ],
+    "off": 18,
+    "mi": 0.0628971223602687
+  },
+  "pair_family_p99": 0.06865197519069796,
+  "pair_family_max": 0.0695324702702251,
+  "pair_family_pval": 0.9066666666666666
+}

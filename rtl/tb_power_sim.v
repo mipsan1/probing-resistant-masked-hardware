@@ -17,41 +17,41 @@
 module tb_power_sim;
 
   parameter N_TRIPLES = 10000;
+  // LFSR seed as a parameter so long gate-level runs can be split into
+  // chunks whose LFSR streams continue exactly (warmup-overlap merge).
+  parameter [31:0] LFSR_SEED = 32'hCAFEFACE;
 
   reg clk;
   reg rst_n;
   reg valid_in;
   reg [7:0] x0_in, x1_in;
-  reg [7:0] r0_in, r1_in, r2_in, r3_in;
-  reg [7:0] r4_in, r5_in, r6_in, r7_in;
-  reg [7:0] r8_in, r9_in, r10_in, r11_in;
-  reg [7:0] r12_in, r13_in, r14_in, r15_in;
-  reg [7:0] r16_in, r17_in, r18_in, r19_in;
-  reg [7:0] r20_in, r21_in, r22_in, r23_in;
-  reg [7:0] r24_in, r25_in, r26_in, r27_in;
+  reg [7:0] r0_in, r1_in, r2_in, r3_in, r4_in, r5_in, r6_in;
   wire valid_out;
   wire [7:0] y0_out, y1_out;
 
   masked_sbox_first_order dut (
       .clk(clk), .rst_n(rst_n), .valid_in(valid_in),
       .x0_in(x0_in), .x1_in(x1_in),
-      .r0_in(r0_in), .r1_in(r1_in), .r2_in(r2_in), .r3_in(r3_in),
-      .r4_in(r4_in), .r5_in(r5_in), .r6_in(r6_in), .r7_in(r7_in),
-      .r8_in(r8_in), .r9_in(r9_in), .r10_in(r10_in), .r11_in(r11_in),
-      .r12_in(r12_in), .r13_in(r13_in), .r14_in(r14_in), .r15_in(r15_in),
-      .r16_in(r16_in), .r17_in(r17_in), .r18_in(r18_in), .r19_in(r19_in),
-      .r20_in(r20_in), .r21_in(r21_in), .r22_in(r22_in), .r23_in(r23_in),
-      .r24_in(r24_in), .r25_in(r25_in), .r26_in(r26_in), .r27_in(r27_in),
+      .r0_in(r0_in), .r1_in(r1_in), .r2_in(r2_in),
+      .r3_in(r3_in), .r4_in(r4_in), .r5_in(r5_in),
+      .r6_in(r6_in),
       .valid_out(valid_out),
       .y0_out(y0_out), .y1_out(y1_out)
   );
 
   reg [31:0] lfsr;
+  // NOTE (rerun fix): the original version advanced the LFSR only ONE
+  // shift per byte, so consecutive "random" bytes were a sliding window
+  // sharing 7 of 8 bits (measured I(s0;s1)=6.999 bits).  That stimulus
+  // degeneracy produced phantom share-MI at the output registers.  We now
+  // advance 8 shifts per byte (same seeds, still fully deterministic).
   function [7:0] next_random;
     input dummy;
+    integer sh;
     begin
-      lfsr = {lfsr[30:0],
-              lfsr[31] ^ lfsr[21] ^ lfsr[1] ^ lfsr[0]};
+      for (sh = 0; sh < 8; sh = sh + 1)
+        lfsr = {lfsr[30:0],
+                lfsr[31] ^ lfsr[21] ^ lfsr[1] ^ lfsr[0]};
       next_random = lfsr[7:0];
     end
   endfunction
@@ -73,18 +73,19 @@ module tb_power_sim;
   // ------------------------------------------------------------------
   // Per-cycle switching activity (Hamming distance model)
   //
-  // We sample the 27 DFF Q wires at every posedge clk, compute
+  // We sample the 34 DFF Q wires (17-bit valid_pipe + y0_out + y1_out
+  // + valid_out) at every posedge clk, compute
   // hd[i] = sum over wires of (current[i] XOR prev[i]), and write
   // "cycle_index hd_value" to the power file.
   // ------------------------------------------------------------------
-  reg [26:0] prev_dff;
-  reg [26:0] curr_dff;
+  reg [33:0] prev_dff;
+  reg [33:0] curr_dff;
   integer cycle_idx;
   integer hd;
   integer kk;
 
   initial begin
-    prev_dff = 27'b0;
+    prev_dff = 34'b0;
     cycle_idx = 0;
   end
 
@@ -100,27 +101,34 @@ module tb_power_sim;
     curr_dff[7]  = dut.valid_pipe[7];
     curr_dff[8]  = dut.valid_pipe[8];
     curr_dff[9]  = dut.valid_pipe[9];
-    curr_dff[10] = dut.y0_out[0];
-    curr_dff[11] = dut.y0_out[1];
-    curr_dff[12] = dut.y0_out[2];
-    curr_dff[13] = dut.y0_out[3];
-    curr_dff[14] = dut.y0_out[4];
-    curr_dff[15] = dut.y0_out[5];
-    curr_dff[16] = dut.y0_out[6];
-    curr_dff[17] = dut.y0_out[7];
-    curr_dff[18] = dut.y1_out[0];
-    curr_dff[19] = dut.y1_out[1];
-    curr_dff[20] = dut.y1_out[2];
-    curr_dff[21] = dut.y1_out[3];
-    curr_dff[22] = dut.y1_out[4];
-    curr_dff[23] = dut.y1_out[5];
-    curr_dff[24] = dut.y1_out[6];
-    curr_dff[25] = dut.y1_out[7];
-    curr_dff[26] = dut.valid_out;
+    curr_dff[10] = dut.valid_pipe[10];
+    curr_dff[11] = dut.valid_pipe[11];
+    curr_dff[12] = dut.valid_pipe[12];
+    curr_dff[13] = dut.valid_pipe[13];
+    curr_dff[14] = dut.valid_pipe[14];
+    curr_dff[15] = dut.valid_pipe[15];
+    curr_dff[16] = dut.valid_pipe[16];
+    curr_dff[17] = dut.y0_out[0];
+    curr_dff[18] = dut.y0_out[1];
+    curr_dff[19] = dut.y0_out[2];
+    curr_dff[20] = dut.y0_out[3];
+    curr_dff[21] = dut.y0_out[4];
+    curr_dff[22] = dut.y0_out[5];
+    curr_dff[23] = dut.y0_out[6];
+    curr_dff[24] = dut.y0_out[7];
+    curr_dff[25] = dut.y1_out[0];
+    curr_dff[26] = dut.y1_out[1];
+    curr_dff[27] = dut.y1_out[2];
+    curr_dff[28] = dut.y1_out[3];
+    curr_dff[29] = dut.y1_out[4];
+    curr_dff[30] = dut.y1_out[5];
+    curr_dff[31] = dut.y1_out[6];
+    curr_dff[32] = dut.y1_out[7];
+    curr_dff[33] = dut.valid_out;
     // Hamming distance
     hd = 0;
-    for (kk = 0; kk < 27; kk = kk + 1)
-      hd = hd + curr_dff[kk] ^ prev_dff[kk];
+    for (kk = 0; kk < 34; kk = kk + 1)
+      hd = hd + (curr_dff[kk] ^ prev_dff[kk]);
     $fwrite(power_fd, "%0d %0d\n", cycle_idx, hd);
     cycle_idx = cycle_idx + 1;
     prev_dff <= curr_dff;
@@ -135,13 +143,8 @@ module tb_power_sim;
     valid_in = 0;
     x0_in = 0; x1_in = 0;
     r0_in = 0; r1_in = 0; r2_in = 0; r3_in = 0;
-    r4_in = 0; r5_in = 0; r6_in = 0; r7_in = 0;
-    r8_in = 0; r9_in = 0; r10_in = 0; r11_in = 0;
-    r12_in = 0; r13_in = 0; r14_in = 0; r15_in = 0;
-    r16_in = 0; r17_in = 0; r18_in = 0; r19_in = 0;
-    r20_in = 0; r21_in = 0; r22_in = 0; r23_in = 0;
-    r24_in = 0; r25_in = 0; r26_in = 0; r27_in = 0;
-    lfsr = 32'hCAFEFACE;
+    r4_in = 0; r5_in = 0; r6_in = 0;
+    lfsr = LFSR_SEED;
 
     power_fd = $fopen("/tmp/fo_power.txt", "w");
     header_fd = $fopen("/tmp/fo_power_header.txt", "w");
@@ -161,17 +164,7 @@ module tb_power_sim;
       r0_in  = next_random(1'b0); r1_in  = next_random(1'b0);
       r2_in  = next_random(1'b0); r3_in  = next_random(1'b0);
       r4_in  = next_random(1'b0); r5_in  = next_random(1'b0);
-      r6_in  = next_random(1'b0); r7_in  = next_random(1'b0);
-      r8_in  = next_random(1'b0); r9_in  = next_random(1'b0);
-      r10_in = next_random(1'b0); r11_in = next_random(1'b0);
-      r12_in = next_random(1'b0); r13_in = next_random(1'b0);
-      r14_in = next_random(1'b0); r15_in = next_random(1'b0);
-      r16_in = next_random(1'b0); r17_in = next_random(1'b0);
-      r18_in = next_random(1'b0); r19_in = next_random(1'b0);
-      r20_in = next_random(1'b0); r21_in = next_random(1'b0);
-      r22_in = next_random(1'b0); r23_in = next_random(1'b0);
-      r24_in = next_random(1'b0); r25_in = next_random(1'b0);
-      r26_in = next_random(1'b0); r27_in = next_random(1'b0);
+      r6_in  = next_random(1'b0);
 
       $fwrite(header_fd, "%02h %02h %02h %0d\n",
               s0 ^ s1, s0, s1, cycle_idx);
@@ -180,7 +173,8 @@ module tb_power_sim;
       valid_in = 1'b1;
       @(negedge clk);
       valid_in = 1'b0;
-      repeat (15) @(posedge clk);
+      // 17-cycle S-box latency + margin (let the pipeline clear)
+      repeat (22) @(posedge clk);
     end
 
     $fclose(power_fd);

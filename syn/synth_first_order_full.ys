@@ -4,8 +4,8 @@
 # AES S-box. Output: gate-level Verilog netlist.
 # =====================================================================
 
-read_verilog -sv /Users/ckim/Downloads/IEEE-Transactions-TIFS/rtl/masked_sbox_pkg.v
-read_verilog -sv /Users/ckim/Downloads/IEEE-Transactions-TIFS/rtl/masked_sbox_first_order.v
+read_verilog -sv /Users/ckim/Downloads/IEEE-Transactions-TIFS_0717_hardware/rtl/masked_sbox_pkg.v
+read_verilog -sv /Users/ckim/Downloads/IEEE-Transactions-TIFS_0717_hardware/rtl/masked_sbox_first_order.v
 
 hierarchy -check -top masked_sbox_first_order
 proc; opt
@@ -16,6 +16,6 @@ abc -fast; opt
 clean
 
 # Write synthesized netlist
-write_verilog -noattr /Users/ckim/Downloads/IEEE-Transactions-TIFS/syn/masked_sbox_first_order_syn.v
+write_verilog -noattr /Users/ckim/Downloads/IEEE-Transactions-TIFS_0717_hardware/syn/masked_sbox_first_order_syn.v
 
 stat

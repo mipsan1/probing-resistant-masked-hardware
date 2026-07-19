@@ -110,7 +110,7 @@ module tb_power_sim_d2;
     curr_dff[34] = dut.valid_out;
     hd = 0;
     for (kk = 0; kk < 35; kk = kk + 1)
-      hd = hd + curr_dff[kk] ^ prev_dff[kk];
+      hd = hd + (curr_dff[kk] ^ prev_dff[kk]);
     $fwrite(power_fd, "%0d %0d\n", cycle_idx, hd);
     cycle_idx = cycle_idx + 1;
     prev_dff <= curr_dff;

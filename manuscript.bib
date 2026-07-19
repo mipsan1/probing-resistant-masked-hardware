@@ -1,0 +1,197 @@
+% =====================================================================
+% manuscript.bib
+% Bibliography for "Probing-Resistant Masked Hardware" (IEEE TIFS).
+% 19 entries: 14 classical (1999-2022) + 5 recent (2020-2025).
+% Style: IEEEtran (uses \bibliographystyle{IEEEtran}).
+% =====================================================================
+
+% --- Classical masking / SCA references (1999-2022) ---
+
+@inproceedings{kocher1999dpa,
+  author    = {Paul Kocher and Joshua Jaffe and Benjamin Jun},
+  title     = {Differential power analysis},
+  booktitle = {Advances in Cryptology -- CRYPTO '99},
+  year      = {1999},
+  pages     = {388--397}
+}
+
+@inproceedings{brier2004cpa,
+  author    = {Eric Brier and Christophe Clavier and Francis Olivier},
+  title     = {Correlation power analysis with a leakage model},
+  booktitle = {Cryptographic Hardware and Embedded Systems -- CHES 2004},
+  year      = {2004},
+  pages     = {16--29}
+}
+
+@inproceedings{chari1999towards,
+  author    = {Suresh Chari and Charanjit S. Jutla and Josyula R. Rao and Pankaj Rohatgi},
+  title     = {Towards sound approaches to counteract power-analysis attacks},
+  booktitle = {Advances in Cryptology -- CRYPTO '99},
+  year      = {1999},
+  pages     = {398--412}
+}
+
+@inproceedings{ishai2003private,
+  author    = {Yuval Ishai and Amit Sahai and David Wagner},
+  title     = {Private circuits: Securing hardware against probing attacks},
+  booktitle = {Advances in Cryptology -- CRYPTO 2003},
+  year      = {2003},
+  pages     = {463--481}
+}
+
+@inproceedings{mangard2005glitch,
+  author    = {Stefan Mangard and Thomas Popp and Berndt M. Gammel},
+  title     = {Side-channel leakage of masked {CMOS} gates},
+  booktitle = {Topics in Cryptology -- CT-RSA 2005},
+  year      = {2005},
+  pages     = {351--365}
+}
+
+@inproceedings{nikova2006threshold,
+  author    = {Svetla Nikova and Christian Rechberger and Vincent Rijmen},
+  title     = {Threshold implementations against side-channel attacks and glitches},
+  booktitle = {Information and Communications Security -- ICICS 2006},
+  year      = {2006},
+  pages     = {529--545}
+}
+
+@inproceedings{gross2016dom,
+  author    = {Hannes Gro{\ss} and
+               Stefan Mangard and
+               Thomas Korak},
+  title     = {Domain-oriented masking: Compact masked hardware implementations with arbitrary protection order},
+  booktitle = {{TIS}@{CCS} -- 2nd Workshop on Trusted Smart Contracts},
+  year      = {2016}
+}
+
+@article{cassiers2020hpc,
+  author  = {Ga\"{e}tan Cassiers and
+             Benjamin {Gr\'{e}goire} and
+             Itamar Levi and
+             Fran\c{c}ois-Xavier Standaert},
+  title   = {Hardware private circuits: From trivial composition to full verification},
+  journal = {IEEE Transactions on Computers},
+  volume  = {70},
+  number  = {10},
+  pages   = {1677--1690},
+  year    = {2021}
+}
+
+@inproceedings{barthe2016strong,
+  author    = {Gilles Barthe and
+               Sonia Bela\"{i}d and
+               Fran\c{c}ois Dupressoir and
+               Pierre-Alain Fouque and
+               Benjamin Gr\'{e}goire and
+               Pierre-Yves Strub},
+  title     = {Strong non-interference and type-directed higher-order masking},
+  booktitle = {ACM SIGSAC Conference on Computer and Communications Security -- CCS 2016},
+  year      = {2016},
+  pages     = {116--129}
+}
+
+@article{faust2018composable,
+  author  = {Sebastian Faust and
+             Krzysztof Pietrzak and
+             Daniele Venturi},
+  title   = {Composable masking schemes in the presence of physical defaults and the robust probing model},
+  journal = {IACR Transactions on Cryptographic Hardware and Embedded Systems (TCHES)},
+  volume  = {2018},
+  number  = {3},
+  pages   = {1--35},
+  year    = {2018}
+}
+
+@inproceedings{duc2014unifying,
+  author    = {Alexandre Duc and
+               Stefan Dziembowski and
+               Sebastian Faust},
+  title     = {Unifying leakage models: From probing attacks to noisy leakage},
+  booktitle = {Advances in Cryptology -- EUROCRYPT 2014},
+  year      = {2014},
+  pages     = {423--440}
+}
+
+@inproceedings{knichel2020silver,
+  author    = {David Knichel and
+               Pascal Sasdrich and
+               Amir Moradi},
+  title     = {{SILVER} -- Statistical independence and leakage verification},
+  booktitle = {Advances in Cryptology -- ASIACRYPT 2020},
+  year      = {2020},
+  pages     = {755--785}
+}
+
+@article{muller2022prolead,
+  author  = {Nils M\"{u}ller and Amir Moradi},
+  title   = {{PROLEAD}: A probing-based hardware leakage detection tool},
+  journal = {IACR Transactions on Cryptographic Hardware and Embedded Systems (TCHES)},
+  volume  = {2022},
+  number  = {4},
+  pages   = {311--348},
+  year    = {2022}
+}
+
+@misc{goodwill2011tvla,
+  author       = {Gilbert Goodwill and
+                  Benjamin Jun and
+                  Joshua Jaffe and
+                  Pankaj Rohatgi},
+  title        = {A testing methodology for side-channel resistance validation},
+  howpublished = {NIST Non-Invasive Attack Testing (NIAT) Workshop},
+  year         = {2011}
+}
+
+% --- Recent (2020-2025) RPM / RPC references ---
+
+@inproceedings{belaid2020random,
+  author    = {Sonia Bela\"{i}d and
+               Jean-S\'{e}bastien Coron and
+               Emmanuel Prouff and
+               Matthieu Rivain and
+               Abdul Rahman Taleb},
+  title     = {Random probing security: Verification, composition, expansion and new constructions},
+  booktitle = {Advances in Cryptology -- CRYPTO 2020},
+  year      = {2020},
+  pages     = {325--358}
+}
+
+@article{berti2023parallel,
+  author  = {Francesco Berti and Sebastian Faust and Maximilian Orlt},
+  title   = {Provable secure parallel gadgets},
+  journal = {IACR Transactions on Cryptographic Hardware and Embedded Systems (TCHES)},
+  volume  = {2023},
+  number  = {4},
+  pages   = {420--459},
+  year    = {2023}
+}
+
+@article{jahandideh2024algebraic,
+  author  = {Vahid Jahandideh and Bart Mennink and Lejla Batina},
+  title   = {An algebraic approach for evaluating random probing security with application to {AES}},
+  journal = {IACR Transactions on Cryptographic Hardware and Embedded Systems (TCHES)},
+  volume  = {2024},
+  number  = {4},
+  pages   = {657--689},
+  year    = {2024}
+}
+
+@article{wang2025precomputation,
+  author  = {Bohan Wang and Fanjie Ji and Yiteng Sun and Weijia Wang},
+  title   = {Random probing security with precomputation},
+  journal = {IACR Transactions on Cryptographic Hardware and Embedded Systems (TCHES)},
+  volume  = {2025},
+  number  = {1},
+  pages   = {523--551},
+  year    = {2025}
+}
+
+@misc{belaid2025cardinal,
+  author       = {Sonia Bela\"{i}d and
+                  Victor Normand and
+                  Matthieu Rivain},
+  title        = {Masked circuit compiler in the cardinal random probing composability framework},
+  howpublished = {IACR Cryptology ePrint Archive, Report 2025/1747},
+  year         = {2025},
+  note         = {\url{https://eprint.iacr.org/2025/1747}}
+}

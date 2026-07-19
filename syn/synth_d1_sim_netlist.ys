@@ -1,0 +1,43 @@
+# =====================================================================
+# synth_d1_sim_netlist.ys
+# ---------------------------------------------------------------------
+# In-house gate-level simulation netlist for the RE-IMPLEMENTED
+# first-order masked AES S-box (rtl/masked_sbox_first_order.v,
+# 17-cycle latency, r0..r6 fresh randomness, valid_pipe[16:0]).
+#
+# Mirrors the PROLEAD synthesis flow (syn/prolead/synth_for_prolead.ys)
+# with two deliberate differences:
+#   * top module is masked_sbox_first_order itself (not the PROLEAD
+#     `circuit` wrapper), so the in-house testbenches
+#     (rtl/tb_probe_sim.v, rtl/tb_power_sim.v) can instantiate it and
+#     hierarchically reference dut.valid_pipe[..] / dut.y0_out[..] /
+#     dut.y1_out[..] / dut.valid_out;
+#   * NO abc / dfflibmap technology mapping, so the Yosys DFF
+#     primitives ($_DFFE_PN0P_ / $_DFF_PN0_ / ...) are preserved and
+#     iverilog can simulate the netlist via Yosys' simcells.v.
+#
+# keep_hierarchy is cleared BOTH as a design attribute
+# (`setattr -set keep_hierarchy 0`) AND as a module attribute
+# (`setattr -mod -set keep_hierarchy 0`) so that `flatten` merges the
+# hard cells (gf_sq_byte_mod / gf_mul_byte_mod / aes_affine_byte_mod,
+# marked (* keep_hierarchy = 1 *) in the RTL) into the top module.
+#
+# Output: syn/masked_sbox_first_order_sim_netlist.v
+# =====================================================================
+
+read_verilog -sv rtl/masked_sbox_pkg.v
+read_verilog -sv rtl/masked_sbox_first_order.v
+
+setattr -set keep_hierarchy 1
+synth -top masked_sbox_first_order -noabc
+
+setattr -set keep_hierarchy 0
+setattr -mod -set keep_hierarchy 0
+flatten
+opt
+clean
+
+select masked_sbox_first_order
+write_verilog -noattr -selected syn/masked_sbox_first_order_sim_netlist.v
+
+stat

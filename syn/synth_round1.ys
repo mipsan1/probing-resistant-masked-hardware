@@ -4,21 +4,28 @@
 # Output: gate-level Verilog netlist (RTL-style, registers kept).
 # =====================================================================
 
-read_verilog -sv /Users/ckim/Downloads/IEEE-Transactions-TIFS/rtl/masked_sbox_pkg.v
-read_verilog -sv /Users/ckim/Downloads/IEEE-Transactions-TIFS/rtl/masked_sbox_first_order.v
-read_verilog -sv /Users/ckim/Downloads/IEEE-Transactions-TIFS/rtl/masked_aes_round1.v
+read_verilog -sv /Users/ckim/Downloads/IEEE-Transactions-TIFS_0717_hardware/rtl/masked_sbox_pkg.v
+read_verilog -sv /Users/ckim/Downloads/IEEE-Transactions-TIFS_0717_hardware/rtl/masked_sbox_first_order.v
+read_verilog -sv /Users/ckim/Downloads/IEEE-Transactions-TIFS_0717_hardware/rtl/masked_aes_round1.v
 
 hierarchy -check -top masked_aes_round1_first_order
 proc; opt
 fsm; opt
 memory; opt
 techmap; opt
-flatten; opt
 clean
 
-# Write synthesized netlist (RTL-style; preserves async-reset always blocks)
-write_verilog -noattr /Users/ckim/Downloads/IEEE-Transactions-TIFS/syn/masked_aes_round1_syn.v
-write_json /Users/ckim/Downloads/IEEE-Transactions-TIFS/syn/masked_aes_round1_flat.json
+# Write the synthesized netlist BEFORE flattening: Yosys 0.67's
+# write_verilog emits duplicate *_reg[i] declarations after `flatten`
+# (mis-split per-bit register processes), which iverilog rejects.
+# The hierarchy-preserving netlist has the same ports and cycle
+# behavior; the S-box sub-modules stay as instances inside it.
+write_verilog -noattr /Users/ckim/Downloads/IEEE-Transactions-TIFS_0717_hardware/syn/masked_aes_round1_syn.v
+
+# Flattened JSON for syn/estimate_delay_json.py (flow unchanged).
+flatten; opt
+clean
+write_json /Users/ckim/Downloads/IEEE-Transactions-TIFS_0717_hardware/syn/masked_aes_round1_flat.json
 
 stat
 

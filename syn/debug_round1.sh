@@ -17,7 +17,7 @@ print(f"pt={pt.hex()} key={k.hex()} golden={g.hex()}")
 with open("sim/round1_pt.txt",   "w") as f: f.write(f"{int.from_bytes(pt, 'big'):032x}\n")
 with open("sim/round1_keys.txt", "w") as f: f.write(f"{int.from_bytes(k, 'big'):032x}\n")
 with open("sim/round1_gold.txt", "w") as f: f.write(f"{int.from_bytes(g, 'big'):032x}\n")
-mask_lines = [f"{random.randint(0, 255):02x}" for _ in range(448)]
+mask_lines = [f"{random.randint(0, 255):02x}" for _ in range(96)]
 with open("sim/round1_mask_0.txt", "w") as f:
     f.write("\n".join(mask_lines) + "\n")
 PYEOF

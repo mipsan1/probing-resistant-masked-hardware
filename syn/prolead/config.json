@@ -6,43 +6,38 @@
   },
   "simulation": {
     "groups": [
-      "4'h$",
-      "4'h0"
+      "8'h$$",
+      "8'h00"
     ],
-    "number_of_clock_cycles": 3,
+    "number_of_clock_cycles": 19,
+    "always_random_inputs": [
+      "randomIn[55:0]"
+    ],
     "output_shares": [
-      "share1[3:0]",
-      "share2[3:0]",
-      "share3[3:0]"
+      "sboxOut[7:0]",
+      "sboxOut[15:8]"
     ],
     "expected_output": [
-      "4'h$",
-      "4'hC"
+      "8'h$$",
+      "8'h63"
     ],
     "input_sequence": [
       {
         "signals": [
           {
-            "name": "sboxIn1[3:0]",
-            "value": "group_in0[3:0]"
+            "name": "sboxIn[7:0]",
+            "value": "group_in0[7:0]"
           },
           {
-            "name": "sboxIn2[3:0]",
-            "value": "group_in1[3:0]"
-          },
-          {
-            "name": "sboxIn3[3:0]",
-            "value": "group_in2[3:0]"
-          },
-          {
-            "name": "en",
-            "value": "1'b1"
+            "name": "sboxIn[15:8]",
+            "value": "group_in1[7:0]"
           }
         ]
       }
     ],
-    "number_of_simulations": 1536000,
-    "number_of_simulations_per_step": 128000
+    "number_of_simulations": 512000,
+    "number_of_simulations_per_step": 128000,
+    "number_of_simulations_per_write": 512000
   },
   "hardware": {
     "clock_signal_name": "clk"
