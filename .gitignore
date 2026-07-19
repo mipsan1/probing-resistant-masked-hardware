@@ -39,3 +39,6 @@ TODO2.md
 
 # Reproducible sim netlist (yosys -s syn/synth_d1_sim_netlist.ys)
 syn/*_sim_netlist.v
+
+# Submission portal package (duplicates of root manuscript files)
+tifs_submission/
