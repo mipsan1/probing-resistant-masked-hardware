@@ -1,0 +1,32 @@
+\documentclass[a4paper,11pt]{article}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}\setlength{\parskip}{0.4em}
+\usepackage[margin=1in]{geometry}
+\begin{document}
+\textbf{Date:} 2026-10-12\\
+\textbf{To:} Editor-in-Chief, IEEE Transactions on Information Forensics and Security\\
+\textbf{Manuscript ID:} T-IFS-28362-2026 (existing draft; not a new submission)\\
+\textbf{Title:} Probing-Resistant Masked Hardware: Formal Security Proofs and Simulation-Based Side-Channel Verification
+
+Dear Editor,
+
+Following the editorial notice of 9 October 2026, the appendix previously uploaded as a separate file has been relabeled as \emph{Supplemental Material} and is uploaded as such. The main manuscript is self-contained and is at most 13 pages in the two-column IEEE format.
+
+\textbf{Contributions.}
+\begin{itemize}\itemsep0.1em
+\item A characterization of the soundness gap between equipment-free value-based statistical verification and glitch-extended probing, via a cone-non-completeness condition; a first-order lint shown sound, and an explicit first-order witness showing that the gap is real.
+\item A masked multiplication gadget (DOM with register barrier) proven robust $d$-NI with perfect simulation for arbitrary $d$, and a first-order AES S-box built from it.
+\item A reproducible, equipment-free verification flow for the first-order design combining the lint, PROLEAD and gate-level TVLA/MI, calibrated with an unmasked positive control.
+\end{itemize}
+
+\textbf{Scope.} The empirical evaluation targets the first-order design; the gadget-level proof holds for arbitrary $d$, and the lint theorem is stated at first order. Limitations are discussed in the paper.
+
+\textbf{Supplemental Material.} Corrected PROLEAD worst-case value, the explicit gap witness, the pre-barrier PROLEAD history, extended discussion, further verifiers and full-chip details.
+
+\textbf{Artifact.} RTL, synthesis scripts, lint, PROLEAD configurations and results are provided in the artifact bundle accompanying the submission.
+
+The manuscript is not published elsewhere or under consideration at another journal. All authors approve this submission. No conflict of interest.
+
+Sincerely,\\
+The Authors
+\end{document}

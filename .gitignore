@@ -1,0 +1,14 @@
+# Big files we keep on disk but skip in version control
+# (they're already in the bundle directory tree)
+*.aux
+*.log
+*.toc
+*.out
+*.bbl
+*.blg
+zenodo_data/
+zenodo_data.zip
+*.zip
+*.pkl
+__pycache__/
+.bak*/

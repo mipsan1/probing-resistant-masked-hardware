@@ -1,0 +1,7 @@
+Functional check of synth/prolead/circuit_v9_xform2.v (netlist used for the 512K PROLEAD run in this folder)
+Method: gate-level simulation (tools/netlist_functional_check.py), 256 secrets x 16 random share/mask draws, inputs held constant.
+Expected: y0 xor y1 == AES S-box(x0 xor x1) once the 800-DFF pipeline has filled.
+
+cells in comb order 46768 dffs 800 primary used 72 UNDRIVEN nets 0
+fraction of (secret,mask) cases with y0^y1 == AES_Sbox(x), by cycle:
+[0.0039, 0.0039, 0.0039, 0.0039, 0.0039, 0.0039, 0.0039, 0.0039, 0.0039, 0.0039, 0.0039, 0.0039, 0.0039, 0.0039, 0.0039, 0.0039, 0.0039, 0.0039, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]

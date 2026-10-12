@@ -1,0 +1,346 @@
+{
+    "timestamp": "Mon Oct 12 02:02:23 2026",
+    "notion": "Probing Security",
+    "number_of_simulations": "256",
+    "total_number_of_probing_sets": "9396",
+    "number_of_leaking_probing_sets": "0",
+    "number_of_non_leaking_probing_sets": "9396",
+    "most_leaking_probing_sets_per_cycle": [
+        {
+            "probes": [
+                "_0171_(2)"
+            ],
+            "extensions": [
+                "\\u_sbox.mul5_q00[7](1)",
+                "\\u_sbox.mul5_q01[7](1)",
+                "\\u_sbox.mul5_q00[7](2)",
+                "\\u_sbox.mul5_q01[7](2)"
+            ],
+            "-log10(p)": "2.4557906689265057"
+        },
+        {
+            "probes": [
+                "_0016_(3)"
+            ],
+            "extensions": [
+                "randomIn[52](2)",
+                "\\u_sbox.x1_s2[4](2)",
+                "randomIn[52](3)",
+                "\\u_sbox.x1_s2[4](3)"
+            ],
+            "-log10(p)": "2.5677427867863321"
+        },
+        {
+            "probes": [
+                "_0107_(4)"
+            ],
+            "extensions": [
+                "\\u_sbox.mul3_q00[7](3)",
+                "\\u_sbox.mul3_q01[7](3)",
+                "\\u_sbox.mul3_q00[7](4)",
+                "\\u_sbox.mul3_q01[7](4)"
+            ],
+            "-log10(p)": "2.1434133731905733"
+        },
+        {
+            "probes": [
+                "_0036_(5)"
+            ],
+            "extensions": [
+                "\\u_sbox.mul1_q00[0](4)",
+                "\\u_sbox.mul1_q01[0](4)",
+                "\\u_sbox.mul1_q00[0](5)",
+                "\\u_sbox.mul1_q01[0](5)"
+            ],
+            "-log10(p)": "3.1810134718085568"
+        },
+        {
+            "probes": [
+                "_0036_(6)"
+            ],
+            "extensions": [
+                "\\u_sbox.mul1_q00[0](5)",
+                "\\u_sbox.mul1_q01[0](5)",
+                "\\u_sbox.mul1_q00[0](6)",
+                "\\u_sbox.mul1_q01[0](6)"
+            ],
+            "-log10(p)": "3.0337121988486615"
+        },
+        {
+            "probes": [
+                "_0041_(7)"
+            ],
+            "extensions": [
+                "\\u_sbox.mul1_q00[5](6)",
+                "\\u_sbox.mul1_q01[5](6)",
+                "\\u_sbox.mul1_q00[5](7)",
+                "\\u_sbox.mul1_q01[5](7)"
+            ],
+            "-log10(p)": "2.037725302521189"
+        },
+        {
+            "probes": [
+                "\\u_sbox.aff1[7](8)"
+            ],
+            "extensions": [
+                "\\u_sbox.aff1[7](7)",
+                "\\u_sbox.aff1[7](8)"
+            ],
+            "-log10(p)": "1.7772431585521593"
+        },
+        {
+            "probes": [
+                "_0082_(9)"
+            ],
+            "extensions": [
+                "\\u_sbox.mul2_q10[6](8)",
+                "\\u_sbox.mul2_q11[6](8)",
+                "\\u_sbox.mul2_q10[6](9)",
+                "\\u_sbox.mul2_q11[6](9)"
+            ],
+            "-log10(p)": "1.9464968013474109"
+        },
+        {
+            "probes": [
+                "_0072_(10)"
+            ],
+            "extensions": [
+                "\\u_sbox.mul2_q00[4](9)",
+                "\\u_sbox.mul2_q01[4](9)",
+                "\\u_sbox.mul2_q00[4](10)",
+                "\\u_sbox.mul2_q01[4](10)"
+            ],
+            "-log10(p)": "1.4478111045056614"
+        },
+        {
+            "probes": [
+                "_0203_(11)"
+            ],
+            "extensions": [
+                "\\u_sbox.inv_q00[7](10)",
+                "\\u_sbox.inv_q01[7](10)",
+                "\\u_sbox.inv_q00[7](11)",
+                "\\u_sbox.inv_q01[7](11)"
+            ],
+            "-log10(p)": "1.9216750500895183"
+        },
+        {
+            "probes": [
+                "_0175_(12)"
+            ],
+            "extensions": [
+                "\\u_sbox.mul5_q10[3](11)",
+                "\\u_sbox.mul5_q11[3](11)",
+                "\\u_sbox.mul5_q10[3](12)",
+                "\\u_sbox.mul5_q11[3](12)"
+            ],
+            "-log10(p)": "1.6375513948011851"
+        },
+        {
+            "probes": [
+                "_0018_(13)"
+            ],
+            "extensions": [
+                "randomIn[54](12)",
+                "\\u_sbox.x1_s2[6](12)",
+                "randomIn[54](13)",
+                "\\u_sbox.x1_s2[6](13)"
+            ],
+            "-log10(p)": "2.2276425035495198"
+        },
+        {
+            "probes": [
+                "_0073_(14)"
+            ],
+            "extensions": [
+                "\\u_sbox.mul2_q00[5](13)",
+                "\\u_sbox.mul2_q01[5](13)",
+                "\\u_sbox.mul2_q00[5](14)",
+                "\\u_sbox.mul2_q01[5](14)"
+            ],
+            "-log10(p)": "3.6530609012789967"
+        },
+        {
+            "probes": [
+                "_0040_(15)"
+            ],
+            "extensions": [
+                "\\u_sbox.mul1_q00[4](14)",
+                "\\u_sbox.mul1_q01[4](14)",
+                "\\u_sbox.mul1_q00[4](15)",
+                "\\u_sbox.mul1_q01[4](15)"
+            ],
+            "-log10(p)": "2.2287152673382882"
+        },
+        {
+            "probes": [
+                "_0170_(16)"
+            ],
+            "extensions": [
+                "\\u_sbox.mul5_q00[6](15)",
+                "\\u_sbox.mul5_q01[6](15)",
+                "\\u_sbox.mul5_q00[6](16)",
+                "\\u_sbox.mul5_q01[6](16)"
+            ],
+            "-log10(p)": "1.4650280369947946"
+        },
+        {
+            "probes": [
+                "_0166_(17)"
+            ],
+            "extensions": [
+                "\\u_sbox.mul5_q00[2](16)",
+                "\\u_sbox.mul5_q01[2](16)",
+                "\\u_sbox.mul5_q00[2](17)",
+                "\\u_sbox.mul5_q01[2](17)"
+            ],
+            "-log10(p)": "1.5714507734634851"
+        },
+        {
+            "probes": [
+                "_0208_(18)"
+            ],
+            "extensions": [
+                "\\u_sbox.inv_q10[4](17)",
+                "\\u_sbox.inv_q11[4](17)",
+                "\\u_sbox.inv_q10[4](18)",
+                "\\u_sbox.inv_q11[4](18)"
+            ],
+            "-log10(p)": "1.3647756182416073"
+        },
+        {
+            "probes": [
+                "_0105_(19)"
+            ],
+            "extensions": [
+                "\\u_sbox.mul3_q00[5](18)",
+                "\\u_sbox.mul3_q01[5](18)",
+                "\\u_sbox.mul3_q00[5](19)",
+                "\\u_sbox.mul3_q01[5](19)"
+            ],
+            "-log10(p)": "1.601226071861479"
+        }
+    ],
+    "most_leaking_probing_sets_in_total": [
+        {
+            "probes": [
+                "_0073_(14)"
+            ],
+            "extensions": [
+                "\\u_sbox.mul2_q00[5](13)",
+                "\\u_sbox.mul2_q01[5](13)",
+                "\\u_sbox.mul2_q00[5](14)",
+                "\\u_sbox.mul2_q01[5](14)"
+            ],
+            "-log10(p)": "3.6530609012789967"
+        },
+        {
+            "probes": [
+                "_0081_(14)"
+            ],
+            "extensions": [
+                "\\u_sbox.mul2_q10[5](13)",
+                "\\u_sbox.mul2_q11[5](13)",
+                "\\u_sbox.mul2_q10[5](14)",
+                "\\u_sbox.mul2_q11[5](14)"
+            ],
+            "-log10(p)": "3.6530609012789967"
+        },
+        {
+            "probes": [
+                "_0036_(5)"
+            ],
+            "extensions": [
+                "\\u_sbox.mul1_q00[0](4)",
+                "\\u_sbox.mul1_q01[0](4)",
+                "\\u_sbox.mul1_q00[0](5)",
+                "\\u_sbox.mul1_q01[0](5)"
+            ],
+            "-log10(p)": "3.1810134718085568"
+        },
+        {
+            "probes": [
+                "_0044_(5)"
+            ],
+            "extensions": [
+                "\\u_sbox.mul1_q10[0](4)",
+                "\\u_sbox.mul1_q11[0](4)",
+                "\\u_sbox.mul1_q10[0](5)",
+                "\\u_sbox.mul1_q11[0](5)"
+            ],
+            "-log10(p)": "3.1810134718085568"
+        },
+        {
+            "probes": [
+                "_0036_(6)"
+            ],
+            "extensions": [
+                "\\u_sbox.mul1_q00[0](5)",
+                "\\u_sbox.mul1_q01[0](5)",
+                "\\u_sbox.mul1_q00[0](6)",
+                "\\u_sbox.mul1_q01[0](6)"
+            ],
+            "-log10(p)": "3.0337121988486615"
+        },
+        {
+            "probes": [
+                "_0044_(6)"
+            ],
+            "extensions": [
+                "\\u_sbox.mul1_q10[0](5)",
+                "\\u_sbox.mul1_q11[0](5)",
+                "\\u_sbox.mul1_q10[0](6)",
+                "\\u_sbox.mul1_q11[0](6)"
+            ],
+            "-log10(p)": "3.0337121988486615"
+        },
+        {
+            "probes": [
+                "_0016_(3)"
+            ],
+            "extensions": [
+                "randomIn[52](2)",
+                "\\u_sbox.x1_s2[4](2)",
+                "randomIn[52](3)",
+                "\\u_sbox.x1_s2[4](3)"
+            ],
+            "-log10(p)": "2.5677427867863321"
+        },
+        {
+            "probes": [
+                "_0008_(3)"
+            ],
+            "extensions": [
+                "randomIn[52](2)",
+                "\\u_sbox.x0_s2[4](2)",
+                "randomIn[52](3)",
+                "\\u_sbox.x0_s2[4](3)"
+            ],
+            "-log10(p)": "2.5677427867863321"
+        },
+        {
+            "probes": [
+                "_0171_(2)"
+            ],
+            "extensions": [
+                "\\u_sbox.mul5_q00[7](1)",
+                "\\u_sbox.mul5_q01[7](1)",
+                "\\u_sbox.mul5_q00[7](2)",
+                "\\u_sbox.mul5_q01[7](2)"
+            ],
+            "-log10(p)": "2.4557906689265057"
+        },
+        {
+            "probes": [
+                "_0179_(2)"
+            ],
+            "extensions": [
+                "\\u_sbox.mul5_q10[7](1)",
+                "\\u_sbox.mul5_q11[7](1)",
+                "\\u_sbox.mul5_q10[7](2)",
+                "\\u_sbox.mul5_q11[7](2)"
+            ],
+            "-log10(p)": "2.4557906689265057"
+        }
+    ]
+}

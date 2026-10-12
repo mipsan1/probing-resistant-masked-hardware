@@ -1,0 +1,49 @@
+{
+  "performance": {
+    "max_number_of_threads": "half",
+    "minimize_probing_sets": "aggressive",
+    "number_of_entries_in_report": 10
+  },
+  "simulation": {
+    "groups": [
+      "8'h$$",
+      "8'h00"
+    ],
+    "number_of_clock_cycles": 19,
+    "always_random_inputs": [
+      "randomIn[47:0]"
+    ],
+    "output_shares": [
+      "sboxOut[7:0]",
+      "sboxOut[15:8]"
+    ],
+    "expected_output": [
+      "8'h$$",
+      "8'h63"
+    ],
+    "input_sequence": [
+      {
+        "signals": [
+          {
+            "name": "sboxIn[7:0]",
+            "value": "group_in0[7:0]"
+          },
+          {
+            "name": "sboxIn[15:8]",
+            "value": "group_in1[7:0]"
+          }
+        ]
+      }
+    ],
+    "number_of_simulations": 1024,
+    "number_of_simulations_per_step": 1024,
+    "number_of_simulations_per_write": 1024
+  },
+  "hardware": {
+    "clock_signal_name": "clk"
+  },
+  "side_channel_analysis": {
+    "order": 1,
+    "transitional_leakage": true
+  }
+}

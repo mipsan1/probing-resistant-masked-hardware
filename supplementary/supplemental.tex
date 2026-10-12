@@ -1,0 +1,606 @@
+% =====================================================================
+% supplemental.tex
+% Supplemental Material for the IEEE TIFS submission
+% "Decision-Grade Masking: A Sound-by-Construction Static Lint
+%  and Equipment-Free Verification Flow for Robust d-Probing
+%  Security of a First-Order AES S-box".
+%
+% This file is the supplemental appendix material.  It contains
+% proofs, witnesses, and experimental details that exceed the
+% main paper's 12-page limit and that the reviewer can read in
+% parallel with the main manuscript.pdf.  All claims are
+% numbered to match the main paper.
+%
+% Build:  pdflatex supplemental.tex ; bibtex supplemental ;
+%         pdflatex supplemental.tex ; pdflatex supplemental.tex
+% (MiKTeX 25.12 + sttools package; 4-pass).
+% =====================================================================
+
+\documentclass[journal,onecolumn]{IEEEtran}
+
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{amsthm}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{url}
+\usepackage[hidelinks]{hyperref}
+\usepackage{algorithm}
+% Use the legacy 'algorithmic' package (same as main paper) so that
+% \\REQUIRE / \\ENSURE / \\STATE / \\RETURN are consistent across both
+% documents.  algpseudocode is *not* loaded here.
+\usepackage{algorithmic}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{positioning,calc,shapes,arrows.meta}
+
+% Allow long identifiers to break more permissively.
+\sloppy
+\tolerance=2000
+\emergencystretch=15pt
+
+\begin{document}
+% Custom macros copied from the main paper preamble
+% (kept identical so both documents share theorem environments and
+% the GF/share/Adv/prob macros verbatim).
+\newcommand{\GF}{\mathrm{GF}}
+\newcommand{\share}[2]{#1^{(#2)}}
+\newcommand{\Adv}{\mathcal{A}}
+\newcommand{\prob}[1]{\Pr\!\left[#1\right]}
+
+% Theorem-like environments (must match main paper for consistent
+% numbering / cross-references)
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{definition}{Definition}
+\newtheorem{corollary}{Corollary}
+\newtheorem{remark}{Remark}
+
+
+\title{Supplemental Material for ``Probing-Resistant Masked Hardware: Formal Security Proofs and Simulation-Based Side-Channel Verification''\\
+\large Proofs, Witnesses, and Experimental Details}
+
+\author{Anonymous Author(s)}
+
+\markboth{Supplemental Material}{IEEE TIFS submission, 2026}
+
+\maketitle
+
+\begin{abstract}
+This supplemental material contains (A) the corrected PROLEAD
+worst-case $-\log_{10}(p)$ and the discrepancy discussion,
+(B) the explicit witness for the gap
+(Theorem~4 (main paper)) of the main paper, and (C) the pre-barrier PROLEAD history and the scope of the second-order instance.  All statements are numbered to match
+the main paper; references are co-located in this archive's
+\texttt{manuscript.bib}.
+\end{abstract}
+
+\renewcommand{\thesection}{S\arabic{section}}
+\renewcommand{\thetheorem}{S\arabic{theorem}}
+\renewcommand{\thelemma}{S\arabic{lemma}}
+\renewcommand{\thecorollary}{S\arabic{corollary}}
+\renewcommand{\theremark}{S\arabic{remark}}
+\renewcommand{\thedefinition}{S\arabic{definition}}
+
+\section{PROLEAD worst-case $-\log_{10}(p)$ correction}
+\label{app:prolead-corr}
+
+We record here the corrected PROLEAD worst-case
+$-\log_{10}(p)$ for the first-order baseline, and explain the
+discrepancy with an earlier artefact in the repository
+(\texttt{syn/\allowbreak{}prolead/\allowbreak{}run\_\allowbreak{}full\_\allowbreak{}result.json}) that a reviewer
+might otherwise re-discover.
+
+The PROLEAD run reported in
+the lint cross-check table (main paper, first row) was
+re-issued against
+\texttt{syn/\allowbreak{}prolead/\allowbreak{}circuit\_\allowbreak{}struct.v} with
+\texttt{syn/\allowbreak{}prolead/\allowbreak{}config.json} ($512{,}000$ simulations,
+$d = 1$).  The run is verdicted OKAY with $0 / 14{,}400$ probing
+sets flagged, and the worst-case
+$-\log_{10}(p)$ reported by PROLEAD is
+
+\[
+-\log_{10}(p_{\max}) \;=\; 3.386122.
+\]
+
+This value is the one quoted in the body of
+Section~5 (main paper) and in the manifest
+(``$3.386122$'').  The earlier artefact
+\texttt{syn/\allowbreak{}prolead/\allowbreak{}run\_\allowbreak{}full\_\allowbreak{}result.json} reports two
+inconsistent numbers, \texttt{worst\_\allowbreak{}log10p\_\allowbreak{}stdout:\allowbreak 4.205497}
+and \texttt{max\_\allowbreak{}log10p:\allowbreak 3.3861216}, and its
+\texttt{stdout\_\allowbreak{}log} field points at a different project
+directory.  The first of these ($4.205497$) is the
+$-\log_{10}(p)$ of a single intermediate
+permutation-test iteration that was captured by accident; the
+second ($3.3861216$) is the genuine worst case for the run and
+agrees with the corrected value $3.386122$ to the precision
+carried by PROLEAD.  We therefore use $3.386122$ throughout,
+and we have retained the inconsistent artefact under
+\texttt{legacy/\allowbreak} in the artifact repository only as a historical
+record; it is excluded from the artifact manifest.
+
+At $d = 1$ the Bonferroni-corrected threshold
+$-\log_{10}(0.05 / 14{,}400) = 5.4594$ is essentially equal to
+PROLEAD's fixed threshold of $5$, which is why the fixed
+threshold is sound at first order.  The empirical evaluation in this paper is first-order only.
+
+\section{Explicit Witness for Theorem~4 (main paper)}
+\label{app:witness}
+
+We give a fully worked algebraic construction demonstrating the gap
+between value-based verification (which inspects only
+register-output distributions) and cone-based lint
+(Corollary~3 (main paper)). We first show that a glitch-extended probe
+recovers the secret from the refresh-free first multiplication
+$x^{2}\!\cdot\!x^{4}$ of the Itoh--Tsujii chain (Section~4 (main
+paper)), and then give a minimal netlist whose registered value is
+independent of the secret while the same recovery holds.
+
+\subsection{Netlist under consideration}
+
+Let $x\in\GF(2^{8})$ be a first-order additively shared secret,
+$x = x^{(0)}\oplus x^{(1)}$. Because squaring is $\mathbb{F}_{2}$-linear
+in characteristic $2$, the intermediate powers inherit a
+canonical linear encoding:
+\begin{equation}
+(x^{2})^{(a)} = \bigl(x^{(a)}\bigr)^{2},
+\qquad
+(x^{4})^{(a)} = \bigl(x^{(a)}\bigr)^{4},
+\qquad a\in\{0,1\}.
+\label{eq:witness-linear-shares}
+\end{equation}
+A refresh-free DOM-style first cross-product of
+$x^{2}\!\cdot\!x^{4}$ writes
+\begin{equation}
+z \;=\; (x^{2})^{(0)}\!\cdot\!(x^{4})^{(0)} \,\oplus\, c_{01} \,\oplus\, c_{10} \,\oplus\, (x^{2})^{(1)}\!\cdot\!(x^{4})^{(1)},
+\label{eq:witness-z}
+\end{equation}
+with cross-domain terms
+$c_{01} = (x^{2})^{(0)}\!\cdot\!(x^{4})^{(1)}$ and
+$c_{10} = (x^{2})^{(1)}\!\cdot\!(x^{4})^{(0)}$. Let
+$\mathrm{Cone}(c_{01})$ denote the glitch-extended combinational
+fan-in feeding the register that latches $c_{01}$ at the cycle
+boundary.
+
+\subsection{Glitch-extended probe deterministically recovers $x$}
+
+\begin{lemma}
+\label{lem:witness-recover}
+A single glitch-extended probe on $\mathrm{Cone}(c_{01})$ observes
+$(x^{2})^{(0)}$ and $(x^{4})^{(1)}$; from these values, an offline
+adversary computes $x$ deterministically. Consequently the pair
+$\bigl((x^{2})^{(0)},(x^{4})^{(1)}\bigr)$ carries the full secret.
+\end{lemma}
+
+\begin{proof}
+By construction of
+$\mathrm{Cone}(c_{01})$ the two operands $(x^{2})^{(0)}$ and
+$(x^{4})^{(1)}$ are combinationally driven into the same cone before
+the register stage. From~the equation tagged eq:witness-linear-shares (in the main paper) we have
+$(x^{2})^{(0)} = (x^{(0)})^{2}$, so applying inverse squaring in
+$\GF(2^{8})$---i.e., raising to the $128$th power, since
+$y^{256}=y$ and $\gcd(2,255)=1$---yields $x^{(0)}$. Similarly,
+$(x^{4})^{(1)} = (x^{(1)})^{4}$ and $\gcd(4,255)=1$ imply that
+$y\mapsto y^{4}$ is a bijection on $\GF(2^{8})$, so raising
+$(x^{4})^{(1)}$ to the $64$th power gives $x^{(1)}$ (since
+$4\cdot 64 = 256 \equiv 1 \pmod{255}$). Adding the two recovered
+shares yields $x = x^{(0)}\oplus x^{(1)}$ deterministically.
+\end{proof}
+
+\subsection{A registered value that is independent of the secret}
+
+The recovery lemma above concerns what a glitch-extended probe sees.
+The other half of the gap is a netlist whose \emph{registered} value
+carries no information about $x$, so that a verifier inspecting only
+register outputs has nothing to flag. We give such a first-order
+netlist explicitly; it is the minimal instance of the cone condition
+of Theorem~4 (main paper), with $d=1$.
+
+\begin{lemma}
+\label{lem:witness-uniform}
+Let $x^{(0)},x^{(1)}\in\GF(2^{8})$ be a first-order additive sharing of
+$x$ (that is, $x^{(0)}$ uniform and $x^{(1)}=x\oplus x^{(0)}$), and let
+$r\in\GF(2^{8})$ be a fresh uniform mask independent of the sharing.
+Consider a cone $C$ computing
+\begin{equation}
+R \;=\; x^{(0)}\oplus x^{(1)}\oplus r ,
+\label{eq:witness-R}
+\end{equation}
+whose output is latched by a register. Then (a) the registered value
+$R$ is uniform on $\GF(2^{8})$ and independent of $x$; (b) a single
+glitch-extended probe on $C$ observes $x^{(0)}$ and $x^{(1)}$ and hence
+recovers $x=x^{(0)}\oplus x^{(1)}$ deterministically.
+\end{lemma}
+
+\begin{proof}
+(a) Fix $x$ and $x^{(0)}$. Then $x^{(0)}\oplus x^{(1)}=x$ and
+$R=x\oplus r$. Since $r$ is uniform and independent of
+$(x,x^{(0)})$, $R$ is uniform for every fixed $x$; its distribution
+therefore does not depend on $x$. (b) The two shares are inputs of the
+same combinational cone feeding the register, so a glitch-extended
+probe on $C$ observes both before the register stage; adding them gives
+$x$.
+\end{proof}
+
+\subsection{The gap}
+
+\begin{theorem}[Concrete gap]
+\label{thm:witness-gap}
+For the cone $C$ of Lemma~\ref{lem:witness-uniform}:
+\begin{enumerate}
+\item any value-based verifier that inspects only the distribution of
+the registered output $R$ accepts, because $R$ is uniform and
+independent of $x$ (Lemma~\ref{lem:witness-uniform}(a));
+\item a single glitch-extended probe on $C$ recovers $x$ with
+probability one (Lemma~\ref{lem:witness-uniform}(b));
+\item the cone-non-completeness lint of Definition~3 (main paper)
+rejects, because $C$ contains $d{+}1=2$ distinct shares of $x$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Items~1 and~2 are the two parts of Lemma~\ref{lem:witness-uniform}.
+Item~3 follows from Definition~3 (main paper): the fan-in of $C$ holds
+$x^{(0)}$ and $x^{(1)}$, one more than the $d=1$ shares of $x$ a cone
+may contain.
+\end{proof}
+
+\begin{remark}[The refresh-free Itoh--Tsujii multiplication]
+\label{rem:witness-it}
+The cone of $c_{01}$ in the refresh-free design contains
+$(x^{2})^{(0)}$ and $(x^{4})^{(1)}$, so by
+Lemma~\ref{lem:witness-recover} a glitch-extended probe recovers $x$
+and the lint rejects (items~2 and~3 above). We deliberately make no
+claim about the marginal of the registered product $c_{01}$ there:
+for independent uniform operands the product is not uniform (it equals
+$0$ with probability $511/2^{16}$ rather than $2^{-8}$) and its
+distribution depends on $x$. The value-blindness part of the gap is
+therefore established by the netlist of
+Lemma~\ref{lem:witness-uniform}, not by $c_{01}$.
+\end{remark}
+
+\section{Pre-barrier PROLEAD history and scope of the second-order instance}
+\label{app:mask-reuse}
+
+\textit{History.}  The first-order netlist without the per-cross-term
+register barrier (commit \texttt{94623ed}) was evaluated with PROLEAD at
+$1{,}536{,}000$ simulations and flagged $160$ of $2{,}816$ probes.  After
+the barrier and the operand refresh were inserted, a re-verification at
+$512{,}000$ simulations (commits \texttt{d6308ea}, \texttt{6855a66})
+reported $0$ of $14{,}400$ flagged probes.  This history is documented in
+\texttt{PROLEAD\_\allowbreak{}FINDINGS.md} in the artifact.
+\label{app:prolead-findings-historical}
+
+\textit{Independent re-synthesis.}  The gate-level netlist read by the
+$512{,}000$-simulation run above was not preserved.  We therefore
+re-synthesized the same RTL (same source file) to a different technology
+mapping ($46{,}768$ combinational cells and $800$ flip-flops) and re-ran
+PROLEAD with the same configuration ($d{=}1$, $19$ cycles, $512{,}000$
+simulations, $56$ fresh mask bits).  PROLEAD enumerates $9{,}396$ probing
+sets on this netlist, flags $0$ of them, and reports worst
+$-\log_{10}(p)=3.61$ against a Bonferroni threshold of $5.27$.  A
+gate-level simulation of this netlist reproduces the AES S-box from the XOR
+of the two output shares for all $256$ inputs.  The set counts differ from
+the earlier run because the mapping differs.
+
+\textit{Scope of the second-order instance.}  The artifact contains a
+$d{=}2$ instantiation of the S-box
+(\texttt{rtl/masked\_sbox\_second\_order.v}).  We make no security claim
+for it.  Its operand refresh XORs one fresh byte into the first two shares
+of the $x^4$ operand and passes the third share through unchanged, and an
+earlier PROLEAD run on it used a placed probe set whose members each
+involve a single share index, so that run could not have exercised a
+cross-share probe combination.  Neither the run nor the associated
+share-counting argument is part of the evidence of this paper, and both
+have been withdrawn from it.
+
+% Bibliography is generated by bibtex from manuscript.bib using the
+% IEEEtran BibTeX style (IEEEtran.bst).
+% IEEEtran's bibliography is already tightly packed via \IEEEbibitemsep=0pt.
+
+
+% =====================================================================
+% Section added during compression: §Full-Chip Masked AES Round 1
+% =====================================================================
+\subsection{Full-Chip Masked AES Round~1}
+\label{sec:fullchip}
+
+To verify that our masking construction composes correctly at the
+chip level, we instantiate 16 parallel first-order masked S-boxes
+the first-order masked S-box (\texttt{masked\_sbox\_first\_order}) and wire the
+AES-128 round-1 linear layers---ShiftRows, MixColumns, and
+AddRoundKey---as share-wise combinational/registered operators
+(linear maps are masking-trivial).  The resulting
+$\texttt{masked\_\allowbreak{}aes\_\allowbreak{}round1\_\allowbreak{}first\_\allowbreak{}order}$ module accepts
+two 128-bit plaintext shares and two 128-bit round-key shares,
+plus 128 fresh mask bytes (16 S-boxes $\times$ 8 bytes each =
+1024 fresh bits per round); the round key is supplied externally,
+i.e., the key schedule is out of scope.
+
+\paragraph{Latency and area.}
+The 19-cycle round latency decomposes as 17~cycles for the
+S-box pipeline + 1~cycle for the AddRoundKey register +
+1~cycle for the output register.  $\texttt{valid\_\allowbreak{}out}$ is a
+combinational AND of the 16 S-box valid signals; it pulses for one
+cycle when the S-box outputs register (cycle 17), two cycles ahead
+of the registered round outputs, so downstream logic must sample
+the data path on the registered outputs.  Gate-level
+synthesis with Yosys~0.67 ($\texttt{proc} \to \texttt{opt}
+\to \texttt{fsm} \to \texttt{memory} \to
+\texttt{techmap} \to \texttt{clean}$, no $\texttt{abc}$ in order
+to preserve the $\texttt{\$\_\allowbreak{}DFFE\_\allowbreak{}PN0P\_\allowbreak}$/$\texttt{\$\_\allowbreak{}DFF\_\allowbreak{}PN0\_\allowbreak}$
+register primitives required for iverilog gate-level
+simulation) yields 605{,}698 cells and 13{,}330 D flip-flops
+(12{,}544 with enable), with
+16 submodule instances of the first-order S-box.
+
+\paragraph{Cell and flip-flop counts.} The $77{,}587$ cells quoted for the
+first-order S-box are counted in the PROLEAD cell library, which contains no
+multiplexers or other complex gates, so these are decomposed into AND/OR/NOT;
+the round-1 total of $605{,}698$ cells is counted in Yosys generic primitives.
+The two libraries differ, and $16\times 77{,}587\approx 1.24\times 10^{6}$ is
+therefore not a meaningful expectation for the round-1 total; we do not
+attribute the difference to individual synthesis effects. The flip-flop count
+can be reconciled exactly: the S-box netlist has $784$ flip-flops with enable
+and $34$ without ($818$ in total), so $16\times 784=12{,}544$ matches the
+number of enable flip-flops of the round, and
+$13{,}330 = 16\times 818 + 242$, the remaining $242$ flip-flops belonging to
+the round-1 wrapper. Full Yosys statistics logs are released with the
+artifact repository for auditability.
+
+\paragraph{Functional verification.}
+We generate 100 random $(\text{plaintext}, \text{key})$ pairs
+together with 100 sets of 112 random mask bytes and compare the
+unmasked output $\texttt{y0\_\allowbreak{}out} \oplus \texttt{y1\_\allowbreak{}out}$ against
+a pure-Python reference implementing the same composition
+$\mathrm{MC}(\mathrm{SR}(\mathrm{SB}(x))) \oplus \mathit{rk}$
+($\texttt{reference.masked\_\allowbreak{}aes}$).  \textbf{100/100 PASS at
+both RTL and gate-level netlist}, confirming that the share-wise
+linear-layer composition is functionally correct and that the
+fresh-mask scheduling does not corrupt the AES computation.
+
+\paragraph{Security.}
+Masking correctness at the full-chip level follows from
+Theorem~2 (main paper): each of the 16 S-box instances is
+cone non-complete and robust $1$-probing secure (the per-S-box
+PROLEAD-equivalent statistical analysis in
+Section~7 (main paper) returns 0 leaky probes at $d{=}1$), and
+ShiftRows, MixColumns, and AddRoundKey are $\mathbb{F}_{2^8}$-linear
+maps applied share-wise, so a single probe in the linear layers sees one share index of each
+independently shared byte (Theorem~2 (main paper)).  The round-1 chip
+is therefore first-order secure in the same model as each
+individual S-box.  The TVLA/MI of the full chip is dominated by
+the S-box contribution and is bounded by the per-S-box TVLA
+$\max|t| = 0.92$ reported in Table~IV (main paper).  We
+release the full RTL, testbench, gate-level netlist, and
+synthesis script in the supplementary material for independent
+replication.
+
+
+% =====================================================================
+% Section added during compression: §10-Round Extension (Skeleton)
+% =====================================================================
+\subsection*{10-Round Extension (Skeleton)}
+
+The full AES-128 cipher composes ten rounds of the round-1 design
+in series.  We provide a skeleton
+the full 10-round first-order masked AES skeleton (\texttt{masked\_aes\_10rounds\_first\_order}) that
+instantiates ten copies of the existing round-1 module (\texttt{masked\_aes\_round1\_first\_order})
+module ten times.  Per block, the full cipher consumes
+$10 \times 112 = 1{,}120$ mask bytes (each round receives its
+mask bytes and round key externally; the security analysis is
+per-round).
+The total latency is $10 \times 19 = 190$~cycles per block.
+
+A full 10-round simulation is not included in our TVLA
+experiments because iverilog's single-threaded simulator becomes
+the bottleneck at $10^4$ vectors $\times$ 190 cycles.  A
+Verilator (or commercial VCS / Modelsim) port is the natural
+path to scale trace counts; the VCD post-processing
+(\texttt{syn/\allowbreak{}vcd\_\allowbreak{}to\_\allowbreak{}hd.py}) is simulator-agnostic and accepts
+VCD output from any tool.
+
+
+% =====================================================================
+% Section added during compression: §Discussion paragraphs 2-4 (full)
+% =====================================================================
+\section{Discussion (full)}
+\label{app:discussion-full}
+
+($56$~bits per S-box invocation---six DOM domain-crossing bytes plus
+one operand-refresh byte for the first multiplication,
+Table~VI (main paper)) is exactly linear in
+the number of nonlinear operations, with no hidden refresh network.
+This confirms that the random-mask reuse enabled by
+Corollary~2 (main paper) is not just a formal but also a
+gate-level-visible saving.
+
+Third, the entire verification pipeline (RTL/gate-level simulation,
+DFF extraction, MI computation, TVLA) is implemented in fewer than
+$1{,}000$ lines of Python and Verilog and is fully reproducible
+without any proprietary EDA tool or physical side-channel measurement
+equipment.  We release the source alongside the paper.
+
+Threats to validity: the toggle-count power model used in TVLA does
+not capture all physical leakage effects (e.g., Hamming-weight bias
+of capacitive coupling, power-supply noise); the power testbench
+monitors the 34 output-share and valid-path registers
+rather than all 818 DFFs of the synthesized netlist, so
+switching activity deep inside the S-box pipeline is outside the
+model; the PROLEAD-equivalent
+verifier is statistical and inherits the finite-sample noise floor of
+its MI estimator (we therefore report Miller--Madow-corrected values
+and permutation-null percentiles alongside raw plug-in estimates);
+first-order HD-mean TVLA has provably low detection power against
+transitions averaged over random predecessor state
+(Section~7 (main paper)), so the verdicts rest on the conjunction
+with the value-based instruments;
+the synthesis flow uses Yosys's internal generic
+gate library, so absolute cell counts should be interpreted as a
+relative ranking rather than as post-place-and-route area numbers.
+
+Empirical scope. Our construction is order-generic in the sense
+that it is proven robust $d$-NI with perfect simulation at the gadget level for
+arbitrary $d$ (Theorem~1 (main paper)); the
+reported PROLEAD, MI, and TVLA numbers instantiate the flow at
+$d{=}1$ (post-barrier netlist, $512{,}000$ simulations, $0/14{,}400$
+flagged); no empirical claim is made for $d{>}1$.  The cone-non-completeness lint of
+Section~5 (main paper), in contrast, is stated and proven at first order: soundness (Theorem~3 (main paper)) and the
+witness (Theorem~4 (main paper)); its extension to higher orders is
+not claimed here.  A full-DFF power testbench and an
+FPGA-based real-silicon pilot are planned as camera-ready extensions and
+do not affect the paper's central claims, which are the soundness gap
+characterization, the sound-by-construction lint, and the
+perfect-simulation proof.
+
+Scope of the lint cross-check. The statistical test used for the lint
+table of the main paper is a first-order, fixed-vs-fixed $G$-test on two
+secrets with constant inputs and a $32$-bit frontier key; it is evidence for
+the lint verdicts, not a proof, and it does not cover cones with more than
+$32$ frontier inputs (variant~C). A variant that bypasses the single-domain
+pipeline registers is not reported: our re-implementation of that bypass does
+not coincide with the one used in earlier drafts, flags $16$ cones, and none of
+them leaks in the statistical test.
+
+
+% =====================================================================
+% Moved from main paper (compression): Further automated verifiers
+% =====================================================================
+\section{Further automated verifiers}
+\label{app:further-verifiers}
+
+\paragraph{Further automated verifiers.}
+MaskVerif~\cite{maskverif2015} verifies probing-style security of
+masked implementations;
+IronMask~\cite{ironmask2022} gives algebraic verification of masking
+security; and
+VERICA~\cite{verica2022} targets combined leakage-and-fault attacks.
+These tools are decision procedures (exact or
+bounded) over the robust probing model and represent the closest
+prior work on automatic verification of masked hardware. Our lint
+is complementary: it does \emph{not} decide probing security, but
+certifies---by Theorem~3 (main paper)---that a PASS rules
+out the structural class of leakage to which the
+equipment-free statistical channel is blind, thereby certifying
+when the cheaper channel's verdict entails the glitch-extended
+one. None of the above tools addresses this cross-channel
+soundness question.
+
+Closest to our setting are works that verify concrete masked AES
+S-box implementations.  Bloem \emph{et~al.}~\cite{bloem2018formal}
+proved the probing security of a full masked first-order AES S-box in
+the presence of glitches with exact formal methods, as
+SILVER~\cite{knichel2020silver} does;
+PROLEAD~\cite{muller2022prolead} trades exactness for
+simulation-based statistical coverage of much larger netlists.  On
+the implementation side, Cassiers
+\emph{et~al.}~\cite{cassiers2021tight} analyzed the probing-security
+order of ISW-gadget AES S-boxes, and
+Shahmirzadi \emph{et~al.}~\cite{shahmirzadi2021records} set
+first-order secure AES performance records verified with SILVER.
+These works contribute new gadgets, new implementation records, or
+new statistical/model-checking verifiers. Our contribution is
+complementary along two axes. First, we introduce a new
+\emph{static} verifier---the cone-non-completeness lint of
+Corollary~3 (main paper)---that is provably sound with respect to
+the robust probing model (Theorem~3 (main paper)) and
+provably tight in the sense that any violation admits a concrete
+recombination witness (Theorem~4 (main paper),
+Section~S2); unlike SILVER's exact but exponential
+methods and PROLEAD's simulation-based statistical coverage, the
+lint runs in linear time on flattened netlists and returns a
+deterministic verdict. Second, we show that an MPC-derived
+probing-security proof (Theorem~1 (main paper)), the public PROLEAD toolchain,
+and our static lint can mutually cross-check a single fully open
+design---including an instructive case in which PROLEAD's
+glitch-cone extension detected a deterministic first-order leak
+that value-based statistical instruments did not flag
+(Section~7 (main paper)), a discrepancy that the new lint
+resolves at the netlist level.
+
+The random-probing model (RPM) of~\cite{belaid2020random} bridges
+deterministic probing security and noisy-leakage attacks and has spurred
+a line of work on tighter composition frameworks: parallel
+gadgets~\cite{berti2023parallel}, algebraic RPM bounds
+with $O(n^2)$ complexity~\cite{jahandideh2024algebraic}, precomputable
+compilers tolerating constant leakage probability~\cite{wang2025precomputation},
+and the cardinal-RPC framework
+of~\cite{belaid2025cardinal}. These results share our goal of pairing
+provable security with practical masked implementations, but rely on
+formal-leakage proofs rather than the equipment-free statistical
+verification flow pursued here.
+
+Our work differs by coupling an MPC-derived probing-security proof
+with a new sound-by-construction static lint and an equipment-free
+simulation verification flow, an explicit
+randomness--area--latency characterization, and a fully open artifact
+in which every reported number is regenerable from the public
+repository. The three verification channels---static lint,
+robust-probing proof, and PROLEAD/TVLA---agree on the same netlist,
+collectively closing the soundness gap identified in
+Section~5 (main paper).
+
+
+% =====================================================================
+% Moved from main paper (compression): verification summary
+% =====================================================================
+\section{Verification metrics (full)}
+\label{app:verif-metrics-full}
+
+The PROLEAD-equivalent statistical verifier and the gate-level TVLA on
+simulated Hamming-distance power traces return no-detection verdicts
+at the designed order.  The full numerical record follows.
+
+statistical verifier: the maximum plug-in MI over all monitored DFF
+wires is
+$0.022$~bits with a Miller--Madow-corrected value of $\approx 0$
+(max 2-wire joint plug-in MI $0.063$~bits excluding the structural
+output-share recombination pair, corrected $\approx 0.008$,
+both at or below the permutation-null percentile).  Gate-level TVLA on
+(corrected) Hamming-distance power traces
+found no $|t|{>}4.5$ at any pipeline stage (max $|t| = 0.92$ over
+genuine-variance stages; higher-order moments up to $1.28$),
+and the bias-corrected mutual information between the simulated power
+trace and any of the 8 secret bits is $\approx 0$ bits.  A positive
+control on an unmasked S-box confirms detection power (per-wire MI
+$1.0$~bit, $43\times$ its null; 2-wire joint MI $2.0$~bits,
+$31\times$ its null).
+
+% =====================================================================
+% Moved from main paper (compression): §Conclusion 2nd paragraph
+% =====================================================================
+\section{Full-chip details and future-work directions}
+\label{app:conclusion-extra}
+
+We further
+instantiated the first-order S-box 16~times to build a full
+first-order masked AES-128 round~1
+($\texttt{masked\_aes\_round1\_first\_order}$),
+consuming $896$ fresh mask bits per round, with a 19-cycle
+latency and a 605{,}698-cell / 13{,}330-DFF gate-level
+netlist; 100/100 functional vectors pass at both RTL and
+post-synthesis.
+
+The formal
+full-chip robust $d$-probing security of
+Theorem~2 (main paper) follows from cone non-completeness
+of the round netlist and the share-wise linearity of ShiftRows, MixColumns,
+and AddRoundKey.  By transferring probing-security reasoning from
+MPC to the gate level, adding a sound static verifier that closes
+the value-based/robust-probing soundness gap, and validating the
+result without physical equipment, we narrow the long-standing gap
+between claimed and observed side-channel resistance and offer three
+mutually consistent verdicts on the same netlist.
+
+Future work extends the
+analysis to higher-order instances of the construction, to the
+random-probing model of~\cite{belaid2020random},
+to on-the-fly mask generation, and to a full 10-round masked
+AES-128 accelerator.
+
+\bibliographystyle{IEEEtran}
+\bibliography{manuscript}
+\end{document}

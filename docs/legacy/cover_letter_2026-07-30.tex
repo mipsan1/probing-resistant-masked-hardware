@@ -1,0 +1,55 @@
+\documentclass[a4paper,11pt]{article}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.25em}
+\setlength{\textwidth}{6.5in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{-0.3in}
+\setlength{\evensidemargin}{-0.3in}
+\setlength{\topmargin}{-0.4in}
+\setlength{\headheight}{0pt}
+\setlength{\headsep}{0pt}
+
+\begin{document}
+
+\textbf{Date:} 2026-07-30
+
+\vskip 0.2em
+\textbf{To:} Editor-in-Chief, IEEE Transactions on Information Forensics and Security
+
+\vskip 0.2em
+\textbf{Subject:} Submission of ``\textit{Decision-Grade Masking}\,''
+
+\vskip 0.6em
+
+Dear Editor,
+
+We respectfully submit the enclosed manuscript for consideration in IEEE TIFS. The work addresses a long-standing question at the intersection of formal verification and side-channel security: when is the equipment-free statistical channel's verdict sound for the glitch-extended probing model?
+
+\textbf{Key contributions.}
+\begin{itemize}
+\itemsep0.1em
+\item A sound-by-construction static lint that, by Theorem~1, certifies when the equipment-free statistical channel's PASS entails the glitch-extended verdict.
+\item A \emph{four-tier} decision-grade evidence chain: functional-stage alive, detection-stage alive, masked $d{=}2$ verdict, masked $d{=}1$ baseline. Each tier is bit-exact reproducible on the same Docker image.
+\item End-to-end reproducibility in $\approx 4$~minutes wall time on a standard 8-thread workstation, with the full Docker image and configuration supplied.
+\item A direct comparison with three contemporary automated verifiers (maskVerif, IronMask, VERICA), clarifying the distinction between exact decision procedures and our sound cross-channel certification.
+\end{itemize}
+
+\textbf{Artifact availability.}
+For double-blind review, the artifact is hosted at the anonymized URL: \texttt{https://anonymous.4open.science/r/probing-resistant-masked-hardware}. This URL provides a frozen snapshot of the source tree, all 33 PROLEAD batch outputs (Tier~3), five positive-control runs, and a reproducibility recipe. The Docker image is \texttt{prolead-d2-experimental:latest} (4.63~GB; full SHA-256 redacted here and revealed at camera-ready). Source code and experiment results are also supplied as supplementary ZIPs.
+
+\textbf{Decision-grade evidence.}
+Across 33 batches of $64{,}000$ simulations each ($17{,}157$ deduplicated probing sets, Bonferroni threshold $6.54$), we observe \textbf{0/17,157 LEAK}. The same Docker image, run on an unmasked first-order replica, yields $1{,}224/1{,}890$ LEAK with worst-case $-\log_{10}p = +\infty$, confirming that the toolchain's detection stage is alive. A masked first-order baseline (legacy macOS run, $14{,}400$ simulations) returns 0/14,400 with worst-case $-\log_{10}p = 3.39$, confirming that the absence of verdicts in Tier~3 is genuine and not an artifact of a stalled detection stage.
+
+\textbf{Submission and double-blind policy.}
+The manuscript follows TIFS double-blind policy: author identities, affiliations, and direct repository URLs are anonymized throughout. Camera-ready will disclose author names, the canonical GitHub URL, and the full Docker image SHA-256. Suggested reviewers (anonymized, no conflict of interest) and a full conflict-of-interest disclosure are attached.
+
+We thank the editor and reviewers for their time and consideration. Please direct any correspondence to the corresponding author via the ScholarOne portal.
+
+\vskip 0.5em
+
+Sincerely,\\
+\textbf{Anonymous Author(s)}\\
+Sejong University
+
+\end{document}

@@ -1,0 +1,86 @@
+# =====================================================================
+# synth_for_prolead_d2.ys (v3.1 — final, all-RTL converted)
+# =====================================================================
+# Synthesizes d=2 (3-share) WITH MASKING BARRIER ZEROED (PC-G) masked S-box into a flat, gate-level
+# netlist that PROLEAD can process.
+#
+# Key insight: PROLEAD's parser is finicky with always/reg constructs.
+# The strategy is to:
+#
+#   1. Convert ALL always blocks to dff/netlist BEFORE flatten
+#      (using proc, proc_dlatch, proc_dff, proc_clean).
+#   2. Then flatten everything except the hard cells (which become
+#      black-boxes after `blackbox`).
+#   3. After flatten, NO always blocks should remain in `circuit`.
+#
+# This is different from v3.1's approach (which kept the multi-module
+# structure). With the yosys 0.52 / PROLEAD environment we have,
+# the multi-module approach fails because the hard-cell modules
+# contain always/reg constructs that PROLEAD's sub-circuit parser
+# can't handle.
+# =====================================================================
+
+read_verilog -sv rtl/masked_sbox_pkg.v
+read_verilog -sv rtl/masked_sbox_second_order.v
+read_verilog -sv rtl/circuit_d2_nomask.v
+read_verilog -lib PROLEAD/yosys/lib/custom_cells.v
+
+# Step 1: hierarchy first
+hierarchy -check -top circuit
+
+# Step 2: Mark ONLY the three hard cells with keep_hierarchy 1
+# (other modules will be inlined by flatten)
+setattr -mod -set keep_hierarchy 1 gf_mul_byte_mod_d2
+setattr -mod -set keep_hierarchy 1 gf_sq_byte_mod_d2
+setattr -mod -set keep_hierarchy 1 aes_affine_byte_mod_d2
+
+# Step 3: Convert all always blocks to netlist (dffs, muxes)
+proc; opt
+async2sync
+dfflegalize -cell $_DFF_P_ 0
+opt
+proc_dlatch
+proc_dff
+proc_clean
+opt
+
+# Step 4: Re-mark keep_hierarchy (abc may have stripped it)
+setattr -mod -set keep_hierarchy 1 gf_mul_byte_mod_d2
+setattr -mod -set keep_hierarchy 1 gf_sq_byte_mod_d2
+setattr -mod -set keep_hierarchy 1 aes_affine_byte_mod_d2
+
+# Step 5: Map to standard cells
+dfflibmap -liberty PROLEAD/yosys/lib/custom_cells.lib
+abc -liberty PROLEAD/yosys/lib/custom_cells.lib
+opt_clean -purge
+
+# Step 5b: After abc, re-run proc to handle any remaining always blocks
+proc; opt
+proc_dlatch
+proc_dff
+proc_clean
+opt
+opt_clean -purge
+
+# Step 6: Re-mark keep_hierarchy after abc
+setattr -mod -set keep_hierarchy 1 gf_mul_byte_mod_d2
+setattr -mod -set keep_hierarchy 1 gf_sq_byte_mod_d2
+setattr -mod -set keep_hierarchy 1 aes_affine_byte_mod_d2
+
+# Step 7: Strip internal logic of hard cells (make them blackboxes)
+blackbox gf_mul_byte_mod_d2
+blackbox gf_sq_byte_mod_d2
+blackbox aes_affine_byte_mod_d2
+
+# Step 5: Flatten DISABLED — keep_hierarchy attribute protects hard cells
+# (v3.1 Step 0 patch — `flatten` destroyed gf_mul_byte_mod_d2 / gf_sq_byte_mod_d2
+# / aes_affine_byte_mod_d2 instances by inlining blackbox bodies. Removing
+# the flatten pass preserves them as modules for PROLEAD's sub-circuit parser.)
+# flatten -noscopeinfo
+# opt_clean -purge
+
+# Write the flat netlist (multi-module: circuit + hard cells preserved)
+write_verilog -noattr syn/prolead/circuit_d2_nomask_struct.v
+write_verilog syn/prolead/circuit_d2_nomask_attr.v
+
+stat

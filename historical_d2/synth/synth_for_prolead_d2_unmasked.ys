@@ -1,0 +1,55 @@
+# ======================================================================
+# synth_for_prolead_d2_unmasked.ys (PC-H: order-2 unmasked control)
+# ======================================================================
+# Synthesizes the order-2 *unmasked* AES S-box wrapper
+# (rtl/circuit_d2_unmasked.v) into a flat, gate-level netlist that
+# PROLEAD can process.
+#
+# Identical preprocessing to synth_for_prolead_d2.ys (v3.1), but the
+# input file is the unmasked wrapper.  Hard cells (gf_mul,
+# gf_sq, aes_affine) are NOT instantiated by the unmasked design
+# (it only has the AES S-box lookup table), so the keep_hierarchy
+# blackbox pass is reduced to a no-op for this run.
+# ======================================================================
+
+read_verilog -sv rtl/masked_sbox_pkg.v
+read_verilog -sv rtl/masked_sbox_second_order.v
+read_verilog -sv rtl/circuit_d2_unmasked.v
+
+# Step 0: Set top module
+hierarchy -check -top circuit
+
+# Step 1: Convert always blocks
+proc
+proc_dlatch
+proc_dff
+proc_clean
+
+# Step 2: Generic synthesis
+synth
+opt
+opt_clean -purge
+
+# Step 3: Map to standard cells
+dfflibmap -liberty PROLEAD/yosys/lib/custom_cells.lib
+abc -liberty PROLEAD/yosys/lib/custom_cells.lib
+opt_clean -purge
+
+# Step 4: Re-run proc for any always-block residue
+proc; opt
+proc_dlatch
+proc_dff
+proc_clean
+opt
+opt_clean -purge
+
+# Step 5: Write the flat netlist
+# (circuit_d2_struct.v uses multi-module flattening where the sub-module
+# instances -- masked_sbox_second_order -- are kept by keep_hierarchy and
+# their internal reg names become flat wires.  Our unmasked design has
+# NO sub-modules, so we just write what we have and rely on PROLEAD's
+# wire-by-name parser to follow the explicit assign statements.)
+write_verilog -noattr syn/prolead/circuit_d2_unmasked_struct.v
+write_verilog syn/prolead/circuit_d2_unmasked_attr.v
+
+stat

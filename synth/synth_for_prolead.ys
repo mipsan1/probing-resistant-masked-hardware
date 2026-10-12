@@ -1,0 +1,24 @@
+# =====================================================================
+# synth_for_prolead.ys
+# ---------------------------------------------------------------------
+# Generate a PROLEAD-compatible gate-level Verilog netlist for the
+# first-order masked AES S-box.
+#
+# Mirrors the 2026-07-19 13:24 flow that produced the original
+# syn/prolead/circuit_struct_attr.v used by the d=1 PROLEAD run
+# logged in sim/masked_prolead_stdout.log (worst -log10(p) = 4.21,
+# 0/14,400 sets, 512,000 simulations, macOS native 19 min 38 s).
+# =====================================================================
+
+read_verilog -sv /work/rtl/masked_sbox_pkg.v
+read_verilog -sv /work/rtl/masked_sbox_first_order.v
+
+hierarchy -check -top masked_sbox_first_order
+proc; opt
+fsm; opt
+memory; opt
+techmap; opt
+clean
+
+setundef -zero
+write_verilog -nostr -noattr /work/synth/prolead/_pre_d1.v

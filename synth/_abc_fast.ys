@@ -1,0 +1,12 @@
+read_verilog -sv rtl/masked_sbox_pkg.v
+read_verilog -sv rtl/masked_sbox_first_order.v
+read_verilog -sv rtl/circuit.v
+hierarchy -check -top circuit
+proc; opt
+fsm; opt
+memory; opt
+techmap; opt
+abc -fast; opt
+clean
+setundef -zero
+write_verilog -nostr -noattr -noexpr synth/prolead/circuit_v3.v

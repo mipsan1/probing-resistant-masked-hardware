@@ -1,0 +1,470 @@
+{
+    "timestamp": "Mon Oct 12 02:12:11 2026",
+    "notion": "Probing Security",
+    "number_of_simulations": "512000",
+    "total_number_of_probing_sets": "9396",
+    "number_of_leaking_probing_sets": "0",
+    "number_of_non_leaking_probing_sets": "9396",
+    "most_leaking_probing_sets_per_cycle": [
+        {
+            "probes": [
+                "_0069_(2)"
+            ],
+            "extensions": [
+                "\\u_sbox.mul2_q00[1](1)",
+                "\\u_sbox.mul2_q01[1](1)",
+                "\\u_sbox.mul2_q00[1](2)",
+                "\\u_sbox.mul2_q01[1](2)"
+            ],
+            "-log10(p)": "3.2594841217169725"
+        },
+        {
+            "probes": [
+                "_0069_(3)"
+            ],
+            "extensions": [
+                "\\u_sbox.mul2_q00[1](2)",
+                "\\u_sbox.mul2_q01[1](2)",
+                "\\u_sbox.mul2_q00[1](3)",
+                "\\u_sbox.mul2_q01[1](3)"
+            ],
+            "-log10(p)": "3.0875988484282053"
+        },
+        {
+            "probes": [
+                "\\u_sbox.sq_x1_s1[2](4)"
+            ],
+            "extensions": [
+                "\\u_sbox.x1_s1[7](3)",
+                "\\u_sbox.x1_s1[6](3)",
+                "\\u_sbox.x1_s1[5](3)",
+                "\\u_sbox.x1_s1[4](3)",
+                "\\u_sbox.x1_s1[3](3)",
+                "\\u_sbox.x1_s1[2](3)",
+                "\\u_sbox.x1_s1[1](3)",
+                "\\u_sbox.x1_s1[0](3)",
+                "\\u_sbox.x1_s1[7](4)",
+                "\\u_sbox.x1_s1[6](4)",
+                "\\u_sbox.x1_s1[5](4)",
+                "\\u_sbox.x1_s1[4](4)",
+                "\\u_sbox.x1_s1[3](4)",
+                "\\u_sbox.x1_s1[2](4)",
+                "\\u_sbox.x1_s1[1](4)",
+                "\\u_sbox.x1_s1[0](4)"
+            ],
+            "-log10(p)": "1.8266902367268378"
+        },
+        {
+            "probes": [
+                "_0101_(5)"
+            ],
+            "extensions": [
+                "\\u_sbox.mul3_q00[1](4)",
+                "\\u_sbox.mul3_q01[1](4)",
+                "\\u_sbox.mul3_q00[1](5)",
+                "\\u_sbox.mul3_q01[1](5)"
+            ],
+            "-log10(p)": "1.9314186875083963"
+        },
+        {
+            "probes": [
+                "\\u_sbox.sq_x1_s1[4](6)"
+            ],
+            "extensions": [
+                "\\u_sbox.x1_s1[7](5)",
+                "\\u_sbox.x1_s1[6](5)",
+                "\\u_sbox.x1_s1[5](5)",
+                "\\u_sbox.x1_s1[4](5)",
+                "\\u_sbox.x1_s1[3](5)",
+                "\\u_sbox.x1_s1[2](5)",
+                "\\u_sbox.x1_s1[1](5)",
+                "\\u_sbox.x1_s1[0](5)",
+                "\\u_sbox.x1_s1[7](6)",
+                "\\u_sbox.x1_s1[6](6)",
+                "\\u_sbox.x1_s1[5](6)",
+                "\\u_sbox.x1_s1[4](6)",
+                "\\u_sbox.x1_s1[3](6)",
+                "\\u_sbox.x1_s1[2](6)",
+                "\\u_sbox.x1_s1[1](6)",
+                "\\u_sbox.x1_s1[0](6)"
+            ],
+            "-log10(p)": "1.8266902367268378"
+        },
+        {
+            "probes": [
+                "_0041_(7)"
+            ],
+            "extensions": [
+                "\\u_sbox.mul1_q00[5](6)",
+                "\\u_sbox.mul1_q01[5](6)",
+                "\\u_sbox.mul1_q00[5](7)",
+                "\\u_sbox.mul1_q01[5](7)"
+            ],
+            "-log10(p)": "2.4209084107765046"
+        },
+        {
+            "probes": [
+                "\\u_sbox.sq_x1_s1[0](8)"
+            ],
+            "extensions": [
+                "\\u_sbox.x1_s1[7](7)",
+                "\\u_sbox.x1_s1[6](7)",
+                "\\u_sbox.x1_s1[5](7)",
+                "\\u_sbox.x1_s1[4](7)",
+                "\\u_sbox.x1_s1[3](7)",
+                "\\u_sbox.x1_s1[2](7)",
+                "\\u_sbox.x1_s1[1](7)",
+                "\\u_sbox.x1_s1[0](7)",
+                "\\u_sbox.x1_s1[7](8)",
+                "\\u_sbox.x1_s1[6](8)",
+                "\\u_sbox.x1_s1[5](8)",
+                "\\u_sbox.x1_s1[4](8)",
+                "\\u_sbox.x1_s1[3](8)",
+                "\\u_sbox.x1_s1[2](8)",
+                "\\u_sbox.x1_s1[1](8)",
+                "\\u_sbox.x1_s1[0](8)"
+            ],
+            "-log10(p)": "1.8266902367268378"
+        },
+        {
+            "probes": [
+                "_0139_(9)"
+            ],
+            "extensions": [
+                "\\u_sbox.mul4_q00[7](8)",
+                "\\u_sbox.mul4_q01[7](8)",
+                "\\u_sbox.mul4_q00[7](9)",
+                "\\u_sbox.mul4_q01[7](9)"
+            ],
+            "-log10(p)": "1.9061380845971512"
+        },
+        {
+            "probes": [
+                "_0139_(10)"
+            ],
+            "extensions": [
+                "\\u_sbox.mul4_q00[7](9)",
+                "\\u_sbox.mul4_q01[7](9)",
+                "\\u_sbox.mul4_q00[7](10)",
+                "\\u_sbox.mul4_q01[7](10)"
+            ],
+            "-log10(p)": "2.2356098261867561"
+        },
+        {
+            "probes": [
+                "_0068_(11)"
+            ],
+            "extensions": [
+                "\\u_sbox.mul2_q00[0](10)",
+                "\\u_sbox.mul2_q01[0](10)",
+                "\\u_sbox.mul2_q00[0](11)",
+                "\\u_sbox.mul2_q01[0](11)"
+            ],
+            "-log10(p)": "3.3617158525790387"
+        },
+        {
+            "probes": [
+                "\\u_sbox.aff1[1](12)"
+            ],
+            "extensions": [
+                "\\u_sbox.aff1[1](11)",
+                "\\u_sbox.aff1[1](12)"
+            ],
+            "-log10(p)": "2.2189890409383479"
+        },
+        {
+            "probes": [
+                "\\u_sbox.aff0[1](13)"
+            ],
+            "extensions": [
+                "\\u_sbox.aff0[1](12)",
+                "\\u_sbox.aff0[1](13)"
+            ],
+            "-log10(p)": "2.1256919217837789"
+        },
+        {
+            "probes": [
+                "_0047_(14)"
+            ],
+            "extensions": [
+                "\\u_sbox.mul1_q10[3](13)",
+                "\\u_sbox.mul1_q11[3](13)",
+                "\\u_sbox.mul1_q10[3](14)",
+                "\\u_sbox.mul1_q11[3](14)"
+            ],
+            "-log10(p)": "3.2755748850715816"
+        },
+        {
+            "probes": [
+                "_0015_(15)"
+            ],
+            "extensions": [
+                "randomIn[51](14)",
+                "\\u_sbox.x1_s2[3](14)",
+                "randomIn[51](15)",
+                "\\u_sbox.x1_s2[3](15)"
+            ],
+            "-log10(p)": "2.6148053138571568"
+        },
+        {
+            "probes": [
+                "\\u_sbox.sq_x1_s1[7](16)"
+            ],
+            "extensions": [
+                "\\u_sbox.x1_s1[7](15)",
+                "\\u_sbox.x1_s1[6](15)",
+                "\\u_sbox.x1_s1[5](15)",
+                "\\u_sbox.x1_s1[4](15)",
+                "\\u_sbox.x1_s1[3](15)",
+                "\\u_sbox.x1_s1[2](15)",
+                "\\u_sbox.x1_s1[1](15)",
+                "\\u_sbox.x1_s1[0](15)",
+                "\\u_sbox.x1_s1[7](16)",
+                "\\u_sbox.x1_s1[6](16)",
+                "\\u_sbox.x1_s1[5](16)",
+                "\\u_sbox.x1_s1[4](16)",
+                "\\u_sbox.x1_s1[3](16)",
+                "\\u_sbox.x1_s1[2](16)",
+                "\\u_sbox.x1_s1[1](16)",
+                "\\u_sbox.x1_s1[0](16)"
+            ],
+            "-log10(p)": "1.8266902367268378"
+        },
+        {
+            "probes": [
+                "\\u_sbox.sq_x1_s1[6](17)"
+            ],
+            "extensions": [
+                "\\u_sbox.x1_s1[7](16)",
+                "\\u_sbox.x1_s1[6](16)",
+                "\\u_sbox.x1_s1[5](16)",
+                "\\u_sbox.x1_s1[4](16)",
+                "\\u_sbox.x1_s1[3](16)",
+                "\\u_sbox.x1_s1[2](16)",
+                "\\u_sbox.x1_s1[1](16)",
+                "\\u_sbox.x1_s1[0](16)",
+                "\\u_sbox.x1_s1[7](17)",
+                "\\u_sbox.x1_s1[6](17)",
+                "\\u_sbox.x1_s1[5](17)",
+                "\\u_sbox.x1_s1[4](17)",
+                "\\u_sbox.x1_s1[3](17)",
+                "\\u_sbox.x1_s1[2](17)",
+                "\\u_sbox.x1_s1[1](17)",
+                "\\u_sbox.x1_s1[0](17)"
+            ],
+            "-log10(p)": "1.8266902367268378"
+        },
+        {
+            "probes": [
+                "\\u_sbox.aff0[1](18)"
+            ],
+            "extensions": [
+                "\\u_sbox.aff0[1](17)",
+                "\\u_sbox.aff0[1](18)"
+            ],
+            "-log10(p)": "3.6076740135724532"
+        },
+        {
+            "probes": [
+                "\\u_sbox.sq_x1_s1[7](19)"
+            ],
+            "extensions": [
+                "\\u_sbox.x1_s1[7](18)",
+                "\\u_sbox.x1_s1[6](18)",
+                "\\u_sbox.x1_s1[5](18)",
+                "\\u_sbox.x1_s1[4](18)",
+                "\\u_sbox.x1_s1[3](18)",
+                "\\u_sbox.x1_s1[2](18)",
+                "\\u_sbox.x1_s1[1](18)",
+                "\\u_sbox.x1_s1[0](18)",
+                "\\u_sbox.x1_s1[7](19)",
+                "\\u_sbox.x1_s1[6](19)",
+                "\\u_sbox.x1_s1[5](19)",
+                "\\u_sbox.x1_s1[4](19)",
+                "\\u_sbox.x1_s1[3](19)",
+                "\\u_sbox.x1_s1[2](19)",
+                "\\u_sbox.x1_s1[1](19)",
+                "\\u_sbox.x1_s1[0](19)"
+            ],
+            "-log10(p)": "1.8266902367268378"
+        }
+    ],
+    "most_leaking_probing_sets_in_total": [
+        {
+            "probes": [
+                "\\u_sbox.aff0[1](18)"
+            ],
+            "extensions": [
+                "\\u_sbox.aff0[1](17)",
+                "\\u_sbox.aff0[1](18)"
+            ],
+            "-log10(p)": "3.6076740135724532"
+        },
+        {
+            "probes": [
+                "\\u_sbox.aff1[1](18)"
+            ],
+            "extensions": [
+                "\\u_sbox.aff1[1](17)",
+                "\\u_sbox.aff1[1](18)"
+            ],
+            "-log10(p)": "3.6076740135724474"
+        },
+        {
+            "probes": [
+                "_0068_(11)"
+            ],
+            "extensions": [
+                "\\u_sbox.mul2_q00[0](10)",
+                "\\u_sbox.mul2_q01[0](10)",
+                "\\u_sbox.mul2_q00[0](11)",
+                "\\u_sbox.mul2_q01[0](11)"
+            ],
+            "-log10(p)": "3.3617158525790387"
+        },
+        {
+            "probes": [
+                "_0047_(14)"
+            ],
+            "extensions": [
+                "\\u_sbox.mul1_q10[3](13)",
+                "\\u_sbox.mul1_q11[3](13)",
+                "\\u_sbox.mul1_q10[3](14)",
+                "\\u_sbox.mul1_q11[3](14)"
+            ],
+            "-log10(p)": "3.2755748850715816"
+        },
+        {
+            "probes": [
+                "_0069_(2)"
+            ],
+            "extensions": [
+                "\\u_sbox.mul2_q00[1](1)",
+                "\\u_sbox.mul2_q01[1](1)",
+                "\\u_sbox.mul2_q00[1](2)",
+                "\\u_sbox.mul2_q01[1](2)"
+            ],
+            "-log10(p)": "3.2594841217169725"
+        },
+        {
+            "probes": [
+                "_0077_(2)"
+            ],
+            "extensions": [
+                "\\u_sbox.mul2_q10[1](1)",
+                "\\u_sbox.mul2_q11[1](1)",
+                "\\u_sbox.mul2_q10[1](2)",
+                "\\u_sbox.mul2_q11[1](2)"
+            ],
+            "-log10(p)": "3.2594841217169725"
+        },
+        {
+            "probes": [
+                "_0053_(2)"
+            ],
+            "extensions": [
+                "randomIn[9](1)",
+                "\\u_sbox.mul1_0[7](1)",
+                "\\u_sbox.mul1_0[6](1)",
+                "\\u_sbox.mul1_0[5](1)",
+                "\\u_sbox.mul1_0[4](1)",
+                "\\u_sbox.mul1_0[3](1)",
+                "\\u_sbox.mul1_0[2](1)",
+                "\\u_sbox.mul1_0[1](1)",
+                "\\u_sbox.mul1_0[0](1)",
+                "\\u_sbox.x1_s3_d2[7](1)",
+                "\\u_sbox.x1_s3_d2[6](1)",
+                "\\u_sbox.x1_s3_d2[5](1)",
+                "\\u_sbox.x1_s3_d2[4](1)",
+                "\\u_sbox.x1_s3_d2[3](1)",
+                "\\u_sbox.x1_s3_d2[2](1)",
+                "\\u_sbox.x1_s3_d2[1](1)",
+                "\\u_sbox.x1_s3_d2[0](1)",
+                "randomIn[9](2)",
+                "\\u_sbox.mul1_0[7](2)",
+                "\\u_sbox.mul1_0[6](2)",
+                "\\u_sbox.mul1_0[5](2)",
+                "\\u_sbox.mul1_0[4](2)",
+                "\\u_sbox.mul1_0[3](2)",
+                "\\u_sbox.mul1_0[2](2)",
+                "\\u_sbox.mul1_0[1](2)",
+                "\\u_sbox.mul1_0[0](2)",
+                "\\u_sbox.x1_s3_d2[7](2)",
+                "\\u_sbox.x1_s3_d2[6](2)",
+                "\\u_sbox.x1_s3_d2[5](2)",
+                "\\u_sbox.x1_s3_d2[4](2)",
+                "\\u_sbox.x1_s3_d2[3](2)",
+                "\\u_sbox.x1_s3_d2[2](2)",
+                "\\u_sbox.x1_s3_d2[1](2)",
+                "\\u_sbox.x1_s3_d2[0](2)"
+            ],
+            "-log10(p)": "3.0875988484282169"
+        },
+        {
+            "probes": [
+                "_0061_(2)"
+            ],
+            "extensions": [
+                "randomIn[9](1)",
+                "\\u_sbox.mul1_1[7](1)",
+                "\\u_sbox.mul1_1[6](1)",
+                "\\u_sbox.mul1_1[5](1)",
+                "\\u_sbox.mul1_1[4](1)",
+                "\\u_sbox.mul1_1[3](1)",
+                "\\u_sbox.mul1_1[2](1)",
+                "\\u_sbox.mul1_1[1](1)",
+                "\\u_sbox.mul1_1[0](1)",
+                "\\u_sbox.x0_s3_d2[7](1)",
+                "\\u_sbox.x0_s3_d2[6](1)",
+                "\\u_sbox.x0_s3_d2[5](1)",
+                "\\u_sbox.x0_s3_d2[4](1)",
+                "\\u_sbox.x0_s3_d2[3](1)",
+                "\\u_sbox.x0_s3_d2[2](1)",
+                "\\u_sbox.x0_s3_d2[1](1)",
+                "\\u_sbox.x0_s3_d2[0](1)",
+                "randomIn[9](2)",
+                "\\u_sbox.mul1_1[7](2)",
+                "\\u_sbox.mul1_1[6](2)",
+                "\\u_sbox.mul1_1[5](2)",
+                "\\u_sbox.mul1_1[4](2)",
+                "\\u_sbox.mul1_1[3](2)",
+                "\\u_sbox.mul1_1[2](2)",
+                "\\u_sbox.mul1_1[1](2)",
+                "\\u_sbox.mul1_1[0](2)",
+                "\\u_sbox.x0_s3_d2[7](2)",
+                "\\u_sbox.x0_s3_d2[6](2)",
+                "\\u_sbox.x0_s3_d2[5](2)",
+                "\\u_sbox.x0_s3_d2[4](2)",
+                "\\u_sbox.x0_s3_d2[3](2)",
+                "\\u_sbox.x0_s3_d2[2](2)",
+                "\\u_sbox.x0_s3_d2[1](2)",
+                "\\u_sbox.x0_s3_d2[0](2)"
+            ],
+            "-log10(p)": "3.0875988484282169"
+        },
+        {
+            "probes": [
+                "_0069_(3)"
+            ],
+            "extensions": [
+                "\\u_sbox.mul2_q00[1](2)",
+                "\\u_sbox.mul2_q01[1](2)",
+                "\\u_sbox.mul2_q00[1](3)",
+                "\\u_sbox.mul2_q01[1](3)"
+            ],
+            "-log10(p)": "3.0875988484282053"
+        },
+        {
+            "probes": [
+                "_0077_(3)"
+            ],
+            "extensions": [
+                "\\u_sbox.mul2_q10[1](2)",
+                "\\u_sbox.mul2_q11[1](2)",
+                "\\u_sbox.mul2_q10[1](3)",
+                "\\u_sbox.mul2_q11[1](3)"
+            ],
+            "-log10(p)": "3.0875988484282053"
+        }
+    ]
+}

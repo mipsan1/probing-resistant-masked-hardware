@@ -1,0 +1,562 @@
+{
+    "timestamp": "Sun Jul 19 15:10:14 2026",
+    "notion": "Probing Security",
+    "number_of_simulations": "1536000",
+    "total_number_of_probing_sets": "1785",
+    "number_of_leaking_probing_sets": "1136",
+    "number_of_non_leaking_probing_sets": "649",
+    "most_leaking_probing_sets_per_cycle": [
+        {
+            "probes": [
+                "_0088_(2)"
+            ],
+            "extensions": [
+                "\\u_sbox.d0[7](1)",
+                "\\u_sbox.d0[7](2)"
+            ],
+            "-log10(p)": "inf"
+        },
+        {
+            "probes": [
+                "_0088_(3)"
+            ],
+            "extensions": [
+                "\\u_sbox.d0[7](2)",
+                "\\u_sbox.d0[7](3)"
+            ],
+            "-log10(p)": "inf"
+        },
+        {
+            "probes": [
+                "_0088_(4)"
+            ],
+            "extensions": [
+                "\\u_sbox.d0[7](3)",
+                "\\u_sbox.d0[7](4)"
+            ],
+            "-log10(p)": "inf"
+        },
+        {
+            "probes": [
+                "_0033_(5)"
+            ],
+            "extensions": [
+                "sboxIn[8](4)",
+                "sboxIn[0](4)",
+                "sboxIn[8](5)",
+                "sboxIn[0](5)"
+            ],
+            "-log10(p)": "inf"
+        },
+        {
+            "probes": [
+                "_0033_(6)"
+            ],
+            "extensions": [
+                "sboxIn[8](5)",
+                "sboxIn[0](5)",
+                "sboxIn[8](6)",
+                "sboxIn[0](6)"
+            ],
+            "-log10(p)": "inf"
+        },
+        {
+            "probes": [
+                "_0033_(7)"
+            ],
+            "extensions": [
+                "sboxIn[8](6)",
+                "sboxIn[0](6)",
+                "sboxIn[8](7)",
+                "sboxIn[0](7)"
+            ],
+            "-log10(p)": "inf"
+        },
+        {
+            "probes": [
+                "_0048_(8)"
+            ],
+            "extensions": [
+                "\\u_sbox.d3[5](7)",
+                "\\u_sbox.d3[5](8)"
+            ],
+            "-log10(p)": "inf"
+        },
+        {
+            "probes": [
+                "_0033_(9)"
+            ],
+            "extensions": [
+                "sboxIn[8](8)",
+                "sboxIn[0](8)",
+                "sboxIn[8](9)",
+                "sboxIn[0](9)"
+            ],
+            "-log10(p)": "inf"
+        },
+        {
+            "probes": [
+                "_0033_(10)"
+            ],
+            "extensions": [
+                "sboxIn[8](9)",
+                "sboxIn[0](9)",
+                "sboxIn[8](10)",
+                "sboxIn[0](10)"
+            ],
+            "-log10(p)": "inf"
+        },
+        {
+            "probes": [
+                "_0044_(11)"
+            ],
+            "extensions": [
+                "sboxOut[0](10)",
+                "\\u_sbox.d9[7](10)",
+                "\\u_sbox.d9[6](10)",
+                "\\u_sbox.d9[5](10)",
+                "\\u_sbox.d9[4](10)",
+                "\\u_sbox.d9[3](10)",
+                "\\u_sbox.d9[2](10)",
+                "\\u_sbox.d9[1](10)",
+                "\\u_sbox.d9[0](10)",
+                "\\u_sbox.valid_pipe[9](10)",
+                "sboxOut[0](11)",
+                "\\u_sbox.d9[7](11)",
+                "\\u_sbox.d9[6](11)",
+                "\\u_sbox.d9[5](11)",
+                "\\u_sbox.d9[4](11)",
+                "\\u_sbox.d9[3](11)",
+                "\\u_sbox.d9[2](11)",
+                "\\u_sbox.d9[1](11)",
+                "\\u_sbox.d9[0](11)",
+                "\\u_sbox.valid_pipe[9](11)"
+            ],
+            "-log10(p)": "inf"
+        },
+        {
+            "probes": [
+                "_0044_(12)"
+            ],
+            "extensions": [
+                "sboxOut[0](11)",
+                "\\u_sbox.d9[7](11)",
+                "\\u_sbox.d9[6](11)",
+                "\\u_sbox.d9[5](11)",
+                "\\u_sbox.d9[4](11)",
+                "\\u_sbox.d9[3](11)",
+                "\\u_sbox.d9[2](11)",
+                "\\u_sbox.d9[1](11)",
+                "\\u_sbox.d9[0](11)",
+                "\\u_sbox.valid_pipe[9](11)",
+                "sboxOut[0](12)",
+                "\\u_sbox.d9[7](12)",
+                "\\u_sbox.d9[6](12)",
+                "\\u_sbox.d9[5](12)",
+                "\\u_sbox.d9[4](12)",
+                "\\u_sbox.d9[3](12)",
+                "\\u_sbox.d9[2](12)",
+                "\\u_sbox.d9[1](12)",
+                "\\u_sbox.d9[0](12)",
+                "\\u_sbox.valid_pipe[9](12)"
+            ],
+            "-log10(p)": "inf"
+        },
+        {
+            "probes": [
+                "_0044_(13)"
+            ],
+            "extensions": [
+                "sboxOut[0](12)",
+                "\\u_sbox.d9[7](12)",
+                "\\u_sbox.d9[6](12)",
+                "\\u_sbox.d9[5](12)",
+                "\\u_sbox.d9[4](12)",
+                "\\u_sbox.d9[3](12)",
+                "\\u_sbox.d9[2](12)",
+                "\\u_sbox.d9[1](12)",
+                "\\u_sbox.d9[0](12)",
+                "\\u_sbox.valid_pipe[9](12)",
+                "sboxOut[0](13)",
+                "\\u_sbox.d9[7](13)",
+                "\\u_sbox.d9[6](13)",
+                "\\u_sbox.d9[5](13)",
+                "\\u_sbox.d9[4](13)",
+                "\\u_sbox.d9[3](13)",
+                "\\u_sbox.d9[2](13)",
+                "\\u_sbox.d9[1](13)",
+                "\\u_sbox.d9[0](13)",
+                "\\u_sbox.valid_pipe[9](13)"
+            ],
+            "-log10(p)": "inf"
+        },
+        {
+            "probes": [
+                "_0044_(14)"
+            ],
+            "extensions": [
+                "sboxOut[0](13)",
+                "\\u_sbox.d9[7](13)",
+                "\\u_sbox.d9[6](13)",
+                "\\u_sbox.d9[5](13)",
+                "\\u_sbox.d9[4](13)",
+                "\\u_sbox.d9[3](13)",
+                "\\u_sbox.d9[2](13)",
+                "\\u_sbox.d9[1](13)",
+                "\\u_sbox.d9[0](13)",
+                "\\u_sbox.valid_pipe[9](13)",
+                "sboxOut[0](14)",
+                "\\u_sbox.d9[7](14)",
+                "\\u_sbox.d9[6](14)",
+                "\\u_sbox.d9[5](14)",
+                "\\u_sbox.d9[4](14)",
+                "\\u_sbox.d9[3](14)",
+                "\\u_sbox.d9[2](14)",
+                "\\u_sbox.d9[1](14)",
+                "\\u_sbox.d9[0](14)",
+                "\\u_sbox.valid_pipe[9](14)"
+            ],
+            "-log10(p)": "inf"
+        },
+        {
+            "probes": [
+                "_0044_(15)"
+            ],
+            "extensions": [
+                "sboxOut[0](14)",
+                "\\u_sbox.d9[7](14)",
+                "\\u_sbox.d9[6](14)",
+                "\\u_sbox.d9[5](14)",
+                "\\u_sbox.d9[4](14)",
+                "\\u_sbox.d9[3](14)",
+                "\\u_sbox.d9[2](14)",
+                "\\u_sbox.d9[1](14)",
+                "\\u_sbox.d9[0](14)",
+                "\\u_sbox.valid_pipe[9](14)",
+                "sboxOut[0](15)",
+                "\\u_sbox.d9[7](15)",
+                "\\u_sbox.d9[6](15)",
+                "\\u_sbox.d9[5](15)",
+                "\\u_sbox.d9[4](15)",
+                "\\u_sbox.d9[3](15)",
+                "\\u_sbox.d9[2](15)",
+                "\\u_sbox.d9[1](15)",
+                "\\u_sbox.d9[0](15)",
+                "\\u_sbox.valid_pipe[9](15)"
+            ],
+            "-log10(p)": "inf"
+        },
+        {
+            "probes": [
+                "_0044_(16)"
+            ],
+            "extensions": [
+                "sboxOut[0](15)",
+                "\\u_sbox.d9[7](15)",
+                "\\u_sbox.d9[6](15)",
+                "\\u_sbox.d9[5](15)",
+                "\\u_sbox.d9[4](15)",
+                "\\u_sbox.d9[3](15)",
+                "\\u_sbox.d9[2](15)",
+                "\\u_sbox.d9[1](15)",
+                "\\u_sbox.d9[0](15)",
+                "\\u_sbox.valid_pipe[9](15)",
+                "sboxOut[0](16)",
+                "\\u_sbox.d9[7](16)",
+                "\\u_sbox.d9[6](16)",
+                "\\u_sbox.d9[5](16)",
+                "\\u_sbox.d9[4](16)",
+                "\\u_sbox.d9[3](16)",
+                "\\u_sbox.d9[2](16)",
+                "\\u_sbox.d9[1](16)",
+                "\\u_sbox.d9[0](16)",
+                "\\u_sbox.valid_pipe[9](16)"
+            ],
+            "-log10(p)": "inf"
+        },
+        {
+            "probes": [
+                "_0044_(17)"
+            ],
+            "extensions": [
+                "sboxOut[0](16)",
+                "\\u_sbox.d9[7](16)",
+                "\\u_sbox.d9[6](16)",
+                "\\u_sbox.d9[5](16)",
+                "\\u_sbox.d9[4](16)",
+                "\\u_sbox.d9[3](16)",
+                "\\u_sbox.d9[2](16)",
+                "\\u_sbox.d9[1](16)",
+                "\\u_sbox.d9[0](16)",
+                "\\u_sbox.valid_pipe[9](16)",
+                "sboxOut[0](17)",
+                "\\u_sbox.d9[7](17)",
+                "\\u_sbox.d9[6](17)",
+                "\\u_sbox.d9[5](17)",
+                "\\u_sbox.d9[4](17)",
+                "\\u_sbox.d9[3](17)",
+                "\\u_sbox.d9[2](17)",
+                "\\u_sbox.d9[1](17)",
+                "\\u_sbox.d9[0](17)",
+                "\\u_sbox.valid_pipe[9](17)"
+            ],
+            "-log10(p)": "inf"
+        },
+        {
+            "probes": [
+                "_0043_(18)"
+            ],
+            "extensions": [
+                "sboxOut[1](17)",
+                "\\u_sbox.d9[7](17)",
+                "\\u_sbox.d9[6](17)",
+                "\\u_sbox.d9[5](17)",
+                "\\u_sbox.d9[4](17)",
+                "\\u_sbox.d9[3](17)",
+                "\\u_sbox.d9[2](17)",
+                "\\u_sbox.d9[1](17)",
+                "\\u_sbox.d9[0](17)",
+                "\\u_sbox.valid_pipe[9](17)",
+                "sboxOut[1](18)",
+                "\\u_sbox.d9[7](18)",
+                "\\u_sbox.d9[6](18)",
+                "\\u_sbox.d9[5](18)",
+                "\\u_sbox.d9[4](18)",
+                "\\u_sbox.d9[3](18)",
+                "\\u_sbox.d9[2](18)",
+                "\\u_sbox.d9[1](18)",
+                "\\u_sbox.d9[0](18)",
+                "\\u_sbox.valid_pipe[9](18)"
+            ],
+            "-log10(p)": "inf"
+        }
+    ],
+    "most_leaking_probing_sets_in_total": [
+        {
+            "probes": [
+                "_0048_(8)"
+            ],
+            "extensions": [
+                "\\u_sbox.d3[5](7)",
+                "\\u_sbox.d3[5](8)"
+            ],
+            "-log10(p)": "inf"
+        },
+        {
+            "probes": [
+                "_0043_(18)"
+            ],
+            "extensions": [
+                "sboxOut[1](17)",
+                "\\u_sbox.d9[7](17)",
+                "\\u_sbox.d9[6](17)",
+                "\\u_sbox.d9[5](17)",
+                "\\u_sbox.d9[4](17)",
+                "\\u_sbox.d9[3](17)",
+                "\\u_sbox.d9[2](17)",
+                "\\u_sbox.d9[1](17)",
+                "\\u_sbox.d9[0](17)",
+                "\\u_sbox.valid_pipe[9](17)",
+                "sboxOut[1](18)",
+                "\\u_sbox.d9[7](18)",
+                "\\u_sbox.d9[6](18)",
+                "\\u_sbox.d9[5](18)",
+                "\\u_sbox.d9[4](18)",
+                "\\u_sbox.d9[3](18)",
+                "\\u_sbox.d9[2](18)",
+                "\\u_sbox.d9[1](18)",
+                "\\u_sbox.d9[0](18)",
+                "\\u_sbox.valid_pipe[9](18)"
+            ],
+            "-log10(p)": "inf"
+        },
+        {
+            "probes": [
+                "_0042_(18)"
+            ],
+            "extensions": [
+                "sboxOut[2](17)",
+                "\\u_sbox.d9[7](17)",
+                "\\u_sbox.d9[6](17)",
+                "\\u_sbox.d9[5](17)",
+                "\\u_sbox.d9[4](17)",
+                "\\u_sbox.d9[3](17)",
+                "\\u_sbox.d9[2](17)",
+                "\\u_sbox.d9[1](17)",
+                "\\u_sbox.d9[0](17)",
+                "\\u_sbox.valid_pipe[9](17)",
+                "sboxOut[2](18)",
+                "\\u_sbox.d9[7](18)",
+                "\\u_sbox.d9[6](18)",
+                "\\u_sbox.d9[5](18)",
+                "\\u_sbox.d9[4](18)",
+                "\\u_sbox.d9[3](18)",
+                "\\u_sbox.d9[2](18)",
+                "\\u_sbox.d9[1](18)",
+                "\\u_sbox.d9[0](18)",
+                "\\u_sbox.valid_pipe[9](18)"
+            ],
+            "-log10(p)": "inf"
+        },
+        {
+            "probes": [
+                "_0041_(18)"
+            ],
+            "extensions": [
+                "sboxOut[3](17)",
+                "\\u_sbox.d9[7](17)",
+                "\\u_sbox.d9[6](17)",
+                "\\u_sbox.d9[5](17)",
+                "\\u_sbox.d9[4](17)",
+                "\\u_sbox.d9[3](17)",
+                "\\u_sbox.d9[2](17)",
+                "\\u_sbox.d9[1](17)",
+                "\\u_sbox.d9[0](17)",
+                "\\u_sbox.valid_pipe[9](17)",
+                "sboxOut[3](18)",
+                "\\u_sbox.d9[7](18)",
+                "\\u_sbox.d9[6](18)",
+                "\\u_sbox.d9[5](18)",
+                "\\u_sbox.d9[4](18)",
+                "\\u_sbox.d9[3](18)",
+                "\\u_sbox.d9[2](18)",
+                "\\u_sbox.d9[1](18)",
+                "\\u_sbox.d9[0](18)",
+                "\\u_sbox.valid_pipe[9](18)"
+            ],
+            "-log10(p)": "inf"
+        },
+        {
+            "probes": [
+                "_0046_(18)"
+            ],
+            "extensions": [
+                "sboxOut[4](17)",
+                "\\u_sbox.d9[7](17)",
+                "\\u_sbox.d9[6](17)",
+                "\\u_sbox.d9[5](17)",
+                "\\u_sbox.d9[4](17)",
+                "\\u_sbox.d9[3](17)",
+                "\\u_sbox.d9[2](17)",
+                "\\u_sbox.d9[1](17)",
+                "\\u_sbox.d9[0](17)",
+                "\\u_sbox.valid_pipe[9](17)",
+                "sboxOut[4](18)",
+                "\\u_sbox.d9[7](18)",
+                "\\u_sbox.d9[6](18)",
+                "\\u_sbox.d9[5](18)",
+                "\\u_sbox.d9[4](18)",
+                "\\u_sbox.d9[3](18)",
+                "\\u_sbox.d9[2](18)",
+                "\\u_sbox.d9[1](18)",
+                "\\u_sbox.d9[0](18)",
+                "\\u_sbox.valid_pipe[9](18)"
+            ],
+            "-log10(p)": "inf"
+        },
+        {
+            "probes": [
+                "_0045_(18)"
+            ],
+            "extensions": [
+                "sboxOut[5](17)",
+                "\\u_sbox.d9[7](17)",
+                "\\u_sbox.d9[6](17)",
+                "\\u_sbox.d9[5](17)",
+                "\\u_sbox.d9[4](17)",
+                "\\u_sbox.d9[3](17)",
+                "\\u_sbox.d9[2](17)",
+                "\\u_sbox.d9[1](17)",
+                "\\u_sbox.d9[0](17)",
+                "\\u_sbox.valid_pipe[9](17)",
+                "sboxOut[5](18)",
+                "\\u_sbox.d9[7](18)",
+                "\\u_sbox.d9[6](18)",
+                "\\u_sbox.d9[5](18)",
+                "\\u_sbox.d9[4](18)",
+                "\\u_sbox.d9[3](18)",
+                "\\u_sbox.d9[2](18)",
+                "\\u_sbox.d9[1](18)",
+                "\\u_sbox.d9[0](18)",
+                "\\u_sbox.valid_pipe[9](18)"
+            ],
+            "-log10(p)": "inf"
+        },
+        {
+            "probes": [
+                "_0050_(18)"
+            ],
+            "extensions": [
+                "sboxOut[6](17)",
+                "\\u_sbox.d9[7](17)",
+                "\\u_sbox.d9[6](17)",
+                "\\u_sbox.d9[5](17)",
+                "\\u_sbox.d9[4](17)",
+                "\\u_sbox.d9[3](17)",
+                "\\u_sbox.d9[2](17)",
+                "\\u_sbox.d9[1](17)",
+                "\\u_sbox.d9[0](17)",
+                "\\u_sbox.valid_pipe[9](17)",
+                "sboxOut[6](18)",
+                "\\u_sbox.d9[7](18)",
+                "\\u_sbox.d9[6](18)",
+                "\\u_sbox.d9[5](18)",
+                "\\u_sbox.d9[4](18)",
+                "\\u_sbox.d9[3](18)",
+                "\\u_sbox.d9[2](18)",
+                "\\u_sbox.d9[1](18)",
+                "\\u_sbox.d9[0](18)",
+                "\\u_sbox.valid_pipe[9](18)"
+            ],
+            "-log10(p)": "inf"
+        },
+        {
+            "probes": [
+                "_0084_(18)"
+            ],
+            "extensions": [
+                "sboxOut[7](17)",
+                "\\u_sbox.d9[7](17)",
+                "\\u_sbox.d9[6](17)",
+                "\\u_sbox.d9[5](17)",
+                "\\u_sbox.d9[4](17)",
+                "\\u_sbox.d9[3](17)",
+                "\\u_sbox.d9[2](17)",
+                "\\u_sbox.d9[1](17)",
+                "\\u_sbox.d9[0](17)",
+                "\\u_sbox.valid_pipe[9](17)",
+                "sboxOut[7](18)",
+                "\\u_sbox.d9[7](18)",
+                "\\u_sbox.d9[6](18)",
+                "\\u_sbox.d9[5](18)",
+                "\\u_sbox.d9[4](18)",
+                "\\u_sbox.d9[3](18)",
+                "\\u_sbox.d9[2](18)",
+                "\\u_sbox.d9[1](18)",
+                "\\u_sbox.d9[0](18)",
+                "\\u_sbox.valid_pipe[9](18)"
+            ],
+            "-log10(p)": "inf"
+        },
+        {
+            "probes": [
+                "_0088_(2)"
+            ],
+            "extensions": [
+                "\\u_sbox.d0[7](1)",
+                "\\u_sbox.d0[7](2)"
+            ],
+            "-log10(p)": "inf"
+        },
+        {
+            "probes": [
+                "_0034_(2)"
+            ],
+            "extensions": [
+                "\\u_sbox.d0[6](1)",
+                "\\u_sbox.d0[6](2)"
+            ],
+            "-log10(p)": "inf"
+        }
+    ]
+}

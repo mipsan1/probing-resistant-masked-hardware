@@ -1,0 +1,3 @@
+/tmp/of.v
+cones 816 dffs 800 violating 0 padded regs 240
+[]

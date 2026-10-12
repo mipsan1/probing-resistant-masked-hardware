@@ -1,0 +1,58 @@
+# PROLEAD configuration -- mode B (single-domain pipeline DFFs bypassed).
+#
+# This file is a TEMPLATE.  Copy your existing BASELINE PROLEAD YAML (the
+# one that produced the paper's 0/14,400 verdict), then change ONLY the
+# two fields marked [MODEB] below.  Keep every other field (shares,
+# randomness, clock cycles, probing order, ...) identical to baseline so
+# the two verdicts are directly comparable.
+#
+# Reference: PROLEAD 1.x YAML schema
+# https://github.com/ChairImpSec/PROLEAD  --> examples/
+
+settings:
+  # === [MODEB] point at the transformed netlist =====================
+  hdl_files:
+    - design/netlist_modeB.v          # produced by yosys write_verilog
+  top_module: masked_sbox_first_order
+
+  # --- side-channel parameters (KEEP IDENTICAL to baseline) ---------
+  side_channel_analysis:
+    order: 1                          # d = 1
+    number_of_simulations: 131072     # first pass: 128K (fast smoke test)
+    #                       524288    # then rerun at 512K for final table
+    number_of_probing_sets: 14400
+    clock_cycles: 19
+    compact_distribution: 32
+    remove_full_probing_sets: true
+    minimize_probe_sets: true
+
+  performance:
+    number_of_threads: 8              # M3 has 8 P+E cores; tune as needed
+    number_of_entries_in_report: 10
+    max_ram_gb: 12                    # leave headroom on 16 GB machines
+
+  # === [MODEB] pick a distinct output path so baseline logs are safe =
+  reports:
+    report_file: results/modeB_report.txt
+    trace_file:  results/modeB_trace.log
+
+# === below: copy from baseline VERBATIM =============================
+# The `shares`, `randomness`, `always_random_inputs`, `fresh_masks`,
+# `input_finite_field`, and probing / evaluation sections must be
+# copied EXACTLY from your baseline YAML.  The two files should differ
+# only in `hdl_files` and `reports` paths.
+#
+# Example placeholders (replace with your baseline values):
+
+shares:
+  x: [x0, x1]                         # <-- replace with baseline share list
+
+randomness:
+  - name: r
+    bits: 56                          # 56 fresh mask bits per S-box invocation
+
+always_random_inputs: []              # <-- copy from baseline
+
+fresh_masks: []                       # <-- copy from baseline
+
+# ==================== END TEMPLATE ==================================

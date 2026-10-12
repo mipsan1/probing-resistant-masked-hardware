@@ -1,0 +1,22 @@
+flattened: gates=67344  dffs=818  primaries=72
+
+=== Check-1: RAW cross-domain cones (glitch-extended non-completeness) ===
+  DFF cones total          : 818
+  reaching D0 only         : 8
+  reaching D1 only         : 8
+  reaching neither (ctrl)  : 802
+  reaching BOTH raw (VIOL) : 0
+  => PASS: no DFF cone exposes both raw domains.
+
+=== Check-2: pipeline-wide cross-domain audit (domain-resolved) ===
+  single-domain cones          : 704
+  cross-domain, BLINDED (r)    : 96   (DOM-style, expected secure)
+  cross-domain, RAW both       : 0   (leak witness)
+  cross-domain, UNBLINDED      : 0   (candidate leak -- needs fresh mask)
+  no-secret (control) cones    : 18
+
+=== VERDICT ===
+  LINT PASS -- released netlist is cone-non-complete
+  (BLINDED cross-domain cones are the DOM cross terms; PROLEAD
+   cross-check on the same netlist should report 0 leaking sets,
+   validating the blinding heuristic.)

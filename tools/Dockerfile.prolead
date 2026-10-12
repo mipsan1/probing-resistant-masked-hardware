@@ -1,0 +1,222 @@
+# =====================================================================
+# Dockerfile for PROLEAD-based verification of our masked AES design
+# =====================================================================
+#
+# Builds PROLEAD inside a Debian-slim container.  PROLEAD depends on:
+#   * boost >= 1.81 with json + process v1 + log + filesystem + thread
+#     + program_options + random + math + spirit (only v1)
+#   * g++ >= 13 (C++20 std::format)
+#   * OpenMP (libomp-dev or libgomp)
+#   * Python 3 dev headers (PROLEAD embeds Python.h)
+#   * libflint-dev (number theory)
+#   * libgdstk C++ headers + static/shared lib (GDS layout scanning)
+#   * libclipper-dev (polygon clipping for gdstk)
+#   * libqhull-r8.0 (convex hull for gdstk)
+#   * zlib, libssl, pkg-config
+#   * yosys (used to re-synth the netlist inside the container if needed;
+#     we ship the synthesized netlist on the host and bind it via -v)
+#
+# PROLEAD's flake.nix pins boost186.  Debian trixie ships boost 1.83
+# which removed <boost/process/v1.hpp>.  We download the boost 1.86.0
+# source from boost.io and install it header-only into
+# /usr/local/include/boost.  The system boost is still installed
+# because we need the *.so files for linking (libboost_log.so etc).
+#
+# We need a modern g++ (>= 13) for C++20 std::format; Debian bookworm
+# ships g++ 12 which lacks it, so we use trixie (g++ 14).
+#
+# Usage (from repo root):
+#   docker build -t prolead-masked-aes -f syn/Dockerfile.prolead .
+#   docker run --rm -v ${PWD}:/work prolead-masked-aes \
+#       bash /work/syn/run_prolead_d2_docker.sh
+# =====================================================================
+
+# ----- Stage 1: boost 1.86.0 headers (overlay over system boost) -----
+FROM debian:trixie-slim AS boost_install
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    bzip2 \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+# Boost 1.86.0 from boost.io (matches PROLEAD's flake.nix pin).
+# Host bakes vendor/boost_1_86_0.tar.bz2 into the build context.
+COPY vendor/boost_1_86_0.tar.bz2 /tmp/boost_1_86_0.tar.bz2
+RUN cd /opt && tar -xjf /tmp/boost_1_86_0.tar.bz2 \
+    && cp -r /opt/boost_1_86_0/boost /usr/local/include/ \
+    && rm -rf /opt/boost_1_86_0 /tmp/boost_1_86_0.tar.bz2
+
+# Sanity: process/v1.hpp and json.hpp must both exist under /usr/local/include/boost
+RUN test -f /usr/local/include/boost/json.hpp \
+    && test -f /usr/local/include/boost/process/v1.hpp \
+    && echo "boost 1.86.0 headers installed OK"
+
+
+# ----- Stage 2: gdstk C++ library (sourced from vendor/) -----
+FROM boost_install AS gdstk_install
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    ca-certificates \
+    cmake \
+    gpg \
+    libomp-dev \
+    libqhull-dev \
+    libqhull-r8.0 \
+    wget \
+    zlib1g-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Use the Kitware apt repo for cmake >= 3.26 (Debian trixie ships
+# cmake 3.25 which is too old for gdstk's CMakeLists.txt minimum).
+RUN wget -qO- https://apt.kitware.com/keys/kitware-archive-latest.asc \
+        | gpg --dearmor -o /usr/share/keyrings/kitware-archive-keyring.gpg \
+    && echo 'deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ jammy main' \
+        > /etc/apt/sources.list.d/kitware.list \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends cmake \
+    && rm -rf /var/lib/apt/lists/* \
+    && cmake --version | head -1
+
+# Vendor gdstk source from build context (host clones this).
+COPY vendor/gdstk /opt/gdstk
+RUN cd /opt/gdstk \
+    && cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DGDSTK_BUILD_EXAMPLES=OFF \
+    && cmake --build build -j$(nproc) --target install \
+    && ldconfig \
+    && rm -rf /opt/gdstk/build
+
+# Sanity: gdstk/cell.hpp and libgdstk.{a,so} must both be visible
+RUN test -f /usr/local/include/gdstk/cell.hpp \
+    && (ls /usr/local/lib/libgdstk.* 2>/dev/null || ls /usr/local/lib/x86_64-linux-gnu/libgdstk.* 2>/dev/null) \
+    && echo "gdstk headers + library installed OK"
+
+
+# ----- Stage 2.5: Build boost 1.86 shared libraries (so PROLEAD
+# compiles against 1.86 headers and links against 1.86 .so files ---
+# avoids the ABI mismatch we saw with system libboost 1.83). -----
+FROM gdstk_install AS boost_libs
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Need Python 3 for b2's build.  libpython3-dev is already in stage 2.
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libpython3-dev \
+    python3 \
+    python3-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Re-extract the full boost 1.86 source so b2 can build it.
+COPY vendor/boost_1_86_0.tar.bz2 /tmp/boost_1_86_0.tar.bz2
+RUN cd /opt && tar -xjf /tmp/boost_1_86_0.tar.bz2 \
+    && rm /tmp/boost_1_86_0.tar.bz2
+
+# Build the boost libraries PROLEAD actually links against.  Headers
+# were already installed in stage 1; here we build only the runtime
+# .so files we need and stage them into /usr/local/lib so they take
+# precedence over system libboost 1.83.
+WORKDIR /opt/boost_1_86_0
+RUN ./bootstrap.sh --prefix=/usr/local --with-libraries=log,filesystem,thread,program_options,random,math,chrono,atomic,system,regex,iostreams,locale,exception,timer,date_time,container \
+    && ./b2 -j$(nproc) --with-program_options --with-log --with-filesystem --with-thread --with-random --with-math --with-chrono --with-atomic --with-system --with-regex --with-iostreams --with-locale --with-exception --with-timer --with-date_time --with-container link=shared,static runtime-link=shared threading=multi variant=release install \
+    && rm -rf /opt/boost_1_86_0 \
+    && ldconfig \
+    && echo "boost 1.86 libraries built and installed OK"
+
+
+# ----- Stage 3: PROLEAD and all remaining build deps -----
+FROM boost_libs AS prolead
+
+ENV DEBIAN_FRONTEND=noninteractive
+ENV BOOST_ROOT=/usr/local
+ENV LD_LIBRARY_PATH=/usr/local/lib
+ENV LIBRARY_PATH=/usr/local/lib
+
+# trixie has g++ 14 by default, but pin to g++-14 + gcc-14 explicitly
+# to make the toolchain choice obvious.
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    bzip2 \
+    ca-certificates \
+    cmake \
+    g++-14 \
+    gcc-14 \
+    git \
+    libboost1.83-all-dev \
+    libclipper-dev \
+    libclipper2 \
+    libflint-dev \
+    libomp-dev \
+    libpython3-dev \
+    libqhull-r8.0 \
+    libssl-dev \
+    libzstd-dev \
+    make \
+    pkg-config \
+    python3 \
+    python3-dev \
+    python3-pip \
+    zlib1g-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Default to g++-14 / gcc-14 (bookworm's default g++ 12 lacks std::format)
+RUN update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-14 100 \
+    && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-14 100 \
+    && g++ --version | head -1
+
+# We need libomp.so for runtime linking (g++ 14 ships its own
+# libgomp.so which satisfies the same ABI; the symlink keeps the
+# -lomp linker flag working under the macOS-originated Makefile).
+RUN if [ ! -e /usr/lib/x86_64-linux-gnu/libomp.so ]; then \
+      ln -s /usr/lib/x86_64-linux-gnu/libgomp.so /usr/lib/x86_64-linux-gnu/libomp.so; \
+    fi
+
+# Python tools used by our pipeline
+RUN pip3 install --break-system-packages --no-cache-dir \
+    pycryptodome
+
+# Copy PROLEAD source (sibling of /work) and patch the Makefile for
+# Debian / Linux + boost 1.86.  We must NOT use the host's
+# pre-built PROLEAD binary; the container rebuilds from source.
+WORKDIR /opt
+COPY PROLEAD /opt/PROLEAD
+
+# Strip macOS ._* resource-fork files that confuse the C++ compiler.
+RUN find /opt/PROLEAD -name '._*' -delete
+
+# Patch Makefile: replace /opt/homebrew/* with Debian /usr paths and
+# drop the -Xpreprocessor -fopenmp wrapping (Debian's g++ accepts
+# -fopenmp directly).  Also drop -lboost_python314 to avoid a Python
+# version mismatch (PROLEAD only needs Python.h, not libboost_python).
+WORKDIR /opt/PROLEAD
+# Patch Makefile.  Order matters: do the -L.. search-path replacement
+# AFTER the LIB_DIR substitution, so the $(LIB_DIR) shell-escape issue
+# is sidestepped and the homebrew -> debian rewrite is the LAST edit.
+RUN sed -i 's|$(LIB_DIR)|lib|g' Makefile \
+    && sed -i 's|-Xpreprocessor -fopenmp|-fopenmp|g' Makefile \
+    && sed -i 's|-lboost_python314||g' Makefile \
+    && sed -i 's|LINK_GDSTK = -lgdstk -lclipper -lqhull_r -lz|LINK_GDSTK = /usr/local/lib/libgdstk.a|g' Makefile \
+    && sed -i 's|LINK_PYTHON3=`pkg-config --libs python3-embed`|LINK_PYTHON3=`pkg-config --libs python3-embed` -lz|g' Makefile \
+    && sed -i 's|-Llib -L/opt/homebrew/lib -L/opt/homebrew/opt/libomp/lib -lomp|-L/usr/local/lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/llvm-19/lib -Llib -lgomp|g' Makefile \
+    && sed -i 's|-Llib -L/opt/homebrew/lib -fsanitize=address -L/opt/homebrew/opt/libomp/lib -lomp|-L/usr/local/lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/llvm-19/lib -Llib -lgomp|g' Makefile \
+    && sed -i 's|$(LINK_BOOST) $(LINK_GDSTK)|$(LINK_BOOST) $(LINK_GDSTK) -lz -lqhull_r|g' Makefile \
+    && sed -i 's|/opt/homebrew/opt/libomp/include|/usr/include|g' Makefile \
+    && sed -i 's|/opt/homebrew/opt/libomp/lib|/usr/lib/x86_64-linux-gnu|g' Makefile \
+    && sed -i 's|/opt/homebrew/lib|/usr/lib/x86_64-linux-gnu|g' Makefile \
+    && sed -i 's|/opt/homebrew/include|/usr/include|g' Makefile \
+    && echo '--- patched Makefile fragment ---' \
+    && grep -E 'LINK_GDSTK|CXX_RELEASE_FLAGS|RELEASE_LINK_FLAGS|C_BENCHMARK_FLAGS' Makefile
+
+# Build PROLEAD in release mode.  -j$(nproc) uses all cores.
+RUN make clean && make release -j$(nproc)
+
+# Sanity: the binary must exist
+RUN test -x /opt/PROLEAD/release/PROLEAD \
+    && /opt/PROLEAD/release/PROLEAD --help 2>&1 | head -3 \
+    && echo "PROLEAD release binary installed OK"
+
+# Workspace mount point: user binds the repo to /work
+WORKDIR /work
+CMD ["/bin/bash"]

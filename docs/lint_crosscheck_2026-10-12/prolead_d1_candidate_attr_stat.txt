@@ -1,0 +1,20 @@
+synth/prolead_d1_candidate_attr.v cones 719 samples/group 131072 Bonferroni -log10p 4.16
+leaking cones 16 worst -log10p 36986.4
+nonleaking worst 2.5
+functional sanity: fraction y0^y1==AES_Sbox(x): 1.0 1.0
+  LEAK cone ('_000154_', 0) |F| 19 df 1023 -log10p 36986.4
+  LEAK cone ('_000348_', 0) |F| 19 df 1023 -log10p 36986.4
+  LEAK cone ('_000342_', 0) |F| 19 df 1023 -log10p 36986.4
+  LEAK cone ('_000347_', 0) |F| 19 df 1023 -log10p 36986.4
+  LEAK cone ('_000395_', 0) |F| 19 df 1023 -log10p 36986.4
+  LEAK cone ('_000396_', 0) |F| 19 df 1023 -log10p 36986.4
+  LEAK cone ('_000346_', 0) |F| 19 df 1023 -log10p 36986.4
+  LEAK cone ('_000394_', 0) |F| 19 df 1023 -log10p 36986.4
+  LEAK cone ('_000392_', 0) |F| 19 df 1023 -log10p 36986.4
+  LEAK cone ('_000393_', 0) |F| 19 df 1023 -log10p 36986.4
+  LEAK cone ('_000397_', 0) |F| 19 df 1023 -log10p 36986.4
+  LEAK cone ('_000344_', 0) |F| 19 df 1023 -log10p 36986.4
+  LEAK cone ('_000391_', 0) |F| 19 df 1023 -log10p 36986.4
+  LEAK cone ('_000343_', 0) |F| 19 df 1023 -log10p 36986.4
+  LEAK cone ('_000345_', 0) |F| 19 df 1023 -log10p 36986.4
+  LEAK cone ('_000655_', 0) |F| 19 df 1023 -log10p 36986.4

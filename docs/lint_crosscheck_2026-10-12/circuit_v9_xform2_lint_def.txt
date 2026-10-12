@@ -1,0 +1,3 @@
+synth/prolead/circuit_v9_xform2.v
+cones 816 dffs 800 violating 0 padded regs 240
+[]

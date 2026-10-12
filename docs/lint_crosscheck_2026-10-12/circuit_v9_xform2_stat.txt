@@ -1,0 +1,4 @@
+synth/prolead/circuit_v9_xform2.v cones 816 samples/group 131072 Bonferroni -log10p 4.21
+leaking cones 0 worst -log10p 2.5
+nonleaking worst 2.5
+functional sanity: fraction y0^y1==AES_Sbox(x): 1.0 1.0
