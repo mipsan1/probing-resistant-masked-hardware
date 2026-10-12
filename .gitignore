@@ -12,3 +12,4 @@ zenodo_data.zip
 *.pkl
 __pycache__/
 .bak*/
+docs/lint_crosscheck_2026-10-12/stray_pkl/

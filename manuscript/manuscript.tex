@@ -37,13 +37,14 @@
 
 \title{Probing-Resistant Masked Hardware: Formal Security Proofs and Simulation-Based Side-Channel Verification}
 
-\author{Anonymous Author(s)
-\thanks{Manuscript under review, October 2026.
-Author identities and affiliations are withheld for review.}
+\author{Cheonshik Kim
+\thanks{Manuscript under review, October 2026.}
+\thanks{C. Kim is with the Department of Computer Engineering, Sejong University,
+Seoul, Republic of Korea (e-mail: mipsan@sejong.ac.kr).}
 }
 
 \markboth{IEEE Transactions on Information Forensics and Security,~Vol.~XX, No.~X, 2026}%
-{Author \MakeLowercase{\textit{et al.}}: Probing-Resistant Masked Hardware}
+{Kim: Probing-Resistant Masked Hardware}
 
 \maketitle
 
@@ -1071,11 +1072,9 @@ next paragraph provides a power-trace-level cross-check that does
 not share code with the probing verifier.  Second, the entire
 design, synthesis flow, and probing-verification code is released
 as open source at
-\url{https://anonymous.4open.science/r/probing-resistant-masked-hardware}
-\emph{(anonymized artifact repository for double-blind review; the
-canonical repository URL will be disclosed in the camera-ready version)}
-so that the result is independently reproducible from a single
-\texttt{build.sh} invocation.  Third, we ran the public PROLEAD
+\url{https://github.com/mipsan1/probing-resistant-masked-hardware}
+so that the results can be independently reproduced from the scripts,
+configurations and raw outputs in the repository.  Third, we ran the public PROLEAD
 toolchain (M\"uller \& Moradi, TCHES~2022) itself on the same
 netlist, using the Yosys-primitive cell library
 (\texttt{syn/prolead/library\_yosys.json}) and a custom
@@ -1490,8 +1489,7 @@ mask generation, and the 10-round AES-128 accelerator) are catalogued
 in the supplementary material.
 
 \section*{Acknowledgment}
-\emph{Acknowledgments are withheld for review.} We note
-that this work builds on the publicly released PROLEAD toolchain
+We note that this work builds on the publicly released PROLEAD toolchain
 (\textit{Probing-Based Leakage Detection Tool for Hardware and
 Software}) whose authors are cited in the bibliography.
 

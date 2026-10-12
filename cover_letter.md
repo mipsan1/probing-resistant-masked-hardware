@@ -45,8 +45,12 @@ RTL, synthesis scripts, lint, PROLEAD configurations and results are available a
 ## Declarations
 
 The manuscript is not published elsewhere or under consideration at another
-journal. All authors approve this submission. No conflict of interest.
+journal. The author approves this submission. No conflict of interest.
 
 Sincerely,
 
-The Authors
+Cheonshik Kim
+
+Department of Computer Engineering, Sejong University, Seoul
+
+mipsan@sejong.ac.kr
