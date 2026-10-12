@@ -40,7 +40,7 @@ full-chip details.
 
 ## Artifact
 
-RTL, synthesis scripts, lint, PROLEAD configurations and results are provided in the artifact bundle accompanying the submission.
+RTL, synthesis scripts, lint, PROLEAD configurations and results are available at https://github.com/mipsan1/probing-resistant-masked-hardware and in the artifact bundle accompanying the submission.
 
 ## Declarations
 
